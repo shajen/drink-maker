@@ -22,8 +22,8 @@ constexpr auto MIN_GLASS_DISAPPEAR_DELAY = 10ms;
 constexpr auto MAX_GLASS_DISAPPEAR_DELAY = std::chrono::duration_cast<std::chrono::milliseconds>(1s);
 constexpr auto STEP_GLASS_DISAPPEAR_DELAY = 10ms;
 
-constexpr auto EDIT_LABEL = "EDYCJA";
-constexpr auto VIEW_LABEL = "PODGLAD";
+constexpr auto EDIT_LABEL = "EDITOR";
+constexpr auto VIEW_LABEL = "PREVIEW";
 
 namespace {
 template <typename T>
@@ -131,27 +131,27 @@ void DebugController::updateDisplay() {
   sprintf(tmpViewLabel, "%s %d", VIEW_LABEL, n);
   if (m_editedType == Type::Capacity) {
     sprintf(tmp, "%d ml", m_capacity);
-    m_display.setEditorData(tmpEditLabel, "POJEMNOSC", tmp);
+    m_display.setEditorData(tmpEditLabel, "CAPACITY", tmp);
   } else if (m_editedType == Type::Distance) {
     sprintf(tmp, "%d cm", m_distance);
-    m_display.setEditorData(tmpEditLabel, "ODLEGLOSC", tmp);
+    m_display.setEditorData(tmpEditLabel, "DISTANCE", tmp);
   } else if (m_editedType == Type::Brightness) {
     sprintf(tmp, "%d", m_brightness);
-    m_display.setEditorData(tmpEditLabel, "JASNOSC", tmp);
+    m_display.setEditorData(tmpEditLabel, "BRIGHTNESS", tmp);
   } else if (m_editedType == Type::Mode) {
     if (m_mode == Mode::Auto) {
-      m_display.setEditorData(tmpEditLabel, "TRYB", "AUTO");
+      m_display.setEditorData(tmpEditLabel, "MODE", "AUTO");
     } else if (m_mode == Mode::Manual) {
-      m_display.setEditorData(tmpEditLabel, "TRYB", "RECZNY");
+      m_display.setEditorData(tmpEditLabel, "MODE", "MANUAL");
     }
   } else if (m_editedType == Type::CurrentDistance) {
     sprintf(tmp, "%d cm", m_glassDetector.getDistance());
-    m_display.setEditorData(tmpViewLabel, "ODLEGLOSC", tmp);
+    m_display.setEditorData(tmpViewLabel, "DISTANCE", tmp);
   } else if (m_editedType == Type::GlassDetectionDelay) {
     sprintf(tmp, "%.1f s", m_glassDetectionDelay.count() / 1000.0f);
-    m_display.setEditorData(tmpEditLabel, "OPOZ WYKR", tmp);
+    m_display.setEditorData(tmpEditLabel, "GLASS APPEAR\nDETECTION DELAY", tmp);
   } else if (m_editedType == Type::GlassDisappearDelay) {
     sprintf(tmp, "%.2f s", m_glassDisappearDelay.count() / 1000.0f);
-    m_display.setEditorData(tmpEditLabel, "OPOZ ZNIKN", tmp);
+    m_display.setEditorData(tmpEditLabel, "GLASS DISAPPEAR\nDETECTION DELAY", tmp);
   }
 }

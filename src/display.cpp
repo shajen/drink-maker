@@ -47,7 +47,13 @@ void Display::loop(const std::chrono::milliseconds& now) {
     m_display.printf("%s", m_editorMode.c_str());
 
     m_display.setCursor(0, 20);
-    m_display.printf("%s", m_editorLabel.c_str());
+    if (m_editorLabel.find('\n') == std::string::npos) {
+      m_display.printf("%s", m_editorLabel.c_str());
+    } else {
+      m_display.setTextSize(1);
+      m_display.printf("%s", m_editorLabel.c_str());
+      m_display.setTextSize(2);
+    }
 
     m_display.setCursor(0, 40);
     m_display.printf("%s", m_editorValue.c_str());

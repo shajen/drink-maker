@@ -111,7 +111,7 @@ void PouringController::updateDisplay(const std::chrono::milliseconds remainingT
   if (m_mode == Mode::Auto) {
     sprintf(line2, "%d ml AUTO", m_capacity);
   } else if (m_mode == Mode::Manual) {
-    sprintf(line2, "%d ml RECZNY", m_capacity);
+    sprintf(line2, "%d ml MANUAL", m_capacity);
   }
   m_display.setPouringData(line1, line2, factor);
 }
