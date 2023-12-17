@@ -8,6 +8,10 @@ TODO
 
 # Quickstart
 
+## 3D files
+
+Parts to print available [here](3d/).
+
 ## Needed hardware
 
 - `ESP8266` board with Li-Ion 18650
