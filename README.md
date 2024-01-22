@@ -2,9 +2,9 @@
 
 The project is to build a device for automatically pouring vodka into glasses that move on wooden toy tracks.
 
-# Presentation
+# Presentation video
 
-TODO
+[![Video](http://img.youtube.com/vi/X1K5z6y2sik/0.jpg)](http://www.youtube.com/watch?v=X1K5z6y2sik "Video")
 
 # Quickstart
 
