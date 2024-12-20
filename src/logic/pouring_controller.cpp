@@ -3,7 +3,7 @@
 
 using namespace std::chrono_literals;
 
-constexpr auto FACTOR = 1000ms;
+constexpr auto FACTOR = 300ms;	// time need to pour 1 ml
 constexpr auto FULL_ANIMATION_TIME = 500ms;
 
 PouringController::PouringController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
