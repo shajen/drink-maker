@@ -55,6 +55,11 @@ BASE_MARGIN = 0.4;
 TRACK_DISTANCE = 40;
 TRACK_MARGIN = 2;
 
+SWITCH_WIDTH = 19;
+SWITCH_DEPTH = 12.8;
+SWITCH_WIDTH_OFFSET = 16;
+SWITCH_DEPTH_OFFSET = 20;
+
 module window(depth, height, depth_offset, height_offset)
 {
     translate([ WALL + WIDTH - MARGIN, WALL + depth_offset - depth / 2, WALL + height_offset ])
@@ -119,6 +124,16 @@ module main()
         pcb_mount(ESP_WIDTH, ESP_DEPTH, 2, 6, ESP_HEIGHT_MOUNTPOINT);
 }
 
+module lid()
+{
+    difference()
+    {
+        shape(WALL, LID_STEP - LID_MARGIN);
+        translate([ SWITCH_WIDTH_OFFSET, SWITCH_DEPTH_OFFSET, -MARGIN ])
+            cube([ SWITCH_WIDTH, SWITCH_DEPTH, WALL + 2 * MARGIN ]);
+    }
+}
+
 module base()
 {
     difference()
@@ -156,6 +171,6 @@ module pipe_u()
 }
 
 translate([ 0 * (WIDTH + 10), 0, 0 ]) main();
-translate([ 1 * (WIDTH + 10), 0, 0 ]) shape(WALL, LID_STEP - LID_MARGIN);
+translate([ 1 * (WIDTH + 10), 0, 0 ]) lid();
 translate([ 2 * (WIDTH + 10), 0, 0 ]) base();
 translate([ 3 * (WIDTH + 10) + TRACK_DISTANCE + 40 + 4 * WALL, 0, 0 ]) pipe_u();
