@@ -48,11 +48,25 @@ MainController::MainController()
       c->m_logicController->onButton2LongClick();
     }
   };
+  auto button1LongStop = [](void* p) {
+    auto c = reinterpret_cast<MainController*>(p);
+    if (!c->factoryReset()) {
+      c->m_logicController->onButton1LongStop();
+    }
+  };
+  auto button2LongStop = [](void* p) {
+    auto c = reinterpret_cast<MainController*>(p);
+    if (!c->factoryReset()) {
+      c->m_logicController->onButton2LongStop();
+    }
+  };
 
   m_button1.attachClick(button1Click, this);
   m_button2.attachClick(button2Click, this);
   m_button1.attachLongPressStart(button1LongClick, this);
   m_button2.attachLongPressStart(button2LongClick, this);
+  m_button1.attachLongPressStop(button1LongStop, this);
+  m_button2.attachLongPressStop(button2LongStop, this);
 }
 
 MainController::~MainController() {}
