@@ -1,5 +1,13 @@
 #pragma once
 
-#include <string>
+#include <Arduino.h>
 
-void log(const char* module, const char* message);
+#include <string_view>
+
+template <typename... Args>
+void log(std::string_view module, std::string_view fmt, Args... args) {
+  const auto now = micros();
+  Serial.printf("[%5lu.%06lu] [%8s] ", now / 1000000, now % 1000000, module.data());
+  Serial.printf(fmt.data(), args...);
+  Serial.printf("\n");
+}

@@ -12,7 +12,7 @@ std::unique_ptr<MainController> mainController;
 
 void setup() {
   Serial.begin(UART_BAUDRATE);
-  printf("\n");
+  Serial.printf("\n");
   log("main", "init");
   log("main", "drink maker v1.0.0");
   Wire.begin(SDA_PIN, SCL_PIN);

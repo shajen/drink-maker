@@ -10,10 +10,8 @@ StatusController::~StatusController() {}
 
 void StatusController::loop(const std::chrono::milliseconds& now) {
   if (m_lastPrintStatusTime + STATUS_PRINT_INTERVAL <= now) {
-    char tmp[100];
     m_fps = 1000.0f * m_frames / (now - m_lastPrintStatusTime).count();
-    sprintf(tmp, "fps: %.2f, free: %d B", m_fps, ESP.getFreeHeap());
-    log("status", tmp);
+    log("status", "fps: %.2f, free: %lu B", m_fps, ESP.getFreeHeap());
     m_frames = 0;
     m_lastPrintStatusTime = now;
   }
