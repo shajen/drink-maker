@@ -1,0 +1,85 @@
+{
+    "title": "Settings",
+    "uri": "/settings",
+    "menu": true,
+    "element": [
+        {
+            "name": "distance",
+            "label": "distance [cm]",
+            "type": "ACRange",
+            "posterior": "div",
+            "magnify": "infront",
+            "value": "10",
+            "min": "1",
+            "max": "50",
+            "step": "1"
+        },
+        {
+            "name": "capacity",
+            "label": "capacity [ml]",
+            "type": "ACRange",
+            "posterior": "div",
+            "magnify": "infront",
+            "value": "30",
+            "min": "10",
+            "max": "100",
+            "step": "5"
+        },
+        {
+            "name": "brightness",
+            "label": "brightness",
+            "type": "ACRange",
+            "posterior": "div",
+            "magnify": "infront",
+            "value": "100",
+            "min": "25",
+            "max": "250",
+            "step": "25"
+        },
+        {
+            "name": "glass_detection_delay",
+            "label": "glass detection delay [ms]",
+            "type": "ACRange",
+            "posterior": "div",
+            "magnify": "infront",
+            "value": "3000",
+            "min": "100",
+            "max": "10000",
+            "step": "100"
+        },
+        {
+            "name": "glass_disappear_delay",
+            "label": "glass disappear delay [ms]",
+            "type": "ACRange",
+            "posterior": "div",
+            "magnify": "infront",
+            "value": "50",
+            "min": "10",
+            "max": "1000",
+            "step": "10"
+        },
+        {
+            "name": "save",
+            "value": "save",
+            "type": "ACSubmit",
+            "uri": "/save_settings"
+        },
+        {
+            "name": "reset",
+            "value": "default settings",
+            "type": "ACButton",
+            "action": "window.location.replace('/reset_settings');"
+        },
+        {
+            "name": "restart",
+            "value": "restart",
+            "type": "ACButton",
+            "action": "window.location.replace('/restart');"
+        },
+        {
+            "name": "css_loader_script",
+            "type": "ACElement",
+            "value": "<script type='text/javascript'>var link=document.createElement('link'); link.rel='stylesheet'; link.type='text/css'; link.href='/style.css'; document.getElementsByTagName('head')[0].appendChild(link);</script>"
+        }
+    ]
+}

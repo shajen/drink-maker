@@ -1,3 +1,4 @@
+#include <LittleFS.h>
 #include <logger.h>
 #include <main_controller.h>
 #include <settings_controller.h>
@@ -16,6 +17,7 @@ void setup() {
   log("main", "init");
   log("main", "drink maker v1.0.0");
   Wire.begin(SDA_PIN, SCL_PIN);
+  LittleFS.begin();
 
   SettingsController::setup();
   mainController = std::make_unique<MainController>();
