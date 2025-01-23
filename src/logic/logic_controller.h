@@ -16,13 +16,6 @@ class LogicController : public Thread {
   LogicController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
   virtual ~LogicController();
 
-  virtual void onButton1Click();
-  virtual void onButton2Click();
-  virtual void onButton1LongClick();
-  virtual void onButton2LongClick();
-  virtual void onButton1LongStop();
-  virtual void onButton2LongStop();
-
  protected:
   int m_capacity;
   int m_distance;

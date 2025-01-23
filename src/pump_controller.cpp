@@ -2,7 +2,7 @@
 #include <logger.h>
 #include <pump_controller.h>
 
-constexpr auto RELAY_PIN = 2;
+constexpr auto RELAY_PIN = 12;
 
 PumpController::PumpController() {
   pinMode(RELAY_PIN, OUTPUT);

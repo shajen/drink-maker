@@ -1,6 +1,5 @@
 #pragma once
 
-#include <OneButton.h>
 #include <display.h>
 #include <glass_detector.h>
 #include <led_controller.h>
@@ -20,10 +19,6 @@ class MainController : public Thread {
 
  private:
   bool switchDebug();
-  bool factoryReset();
-
-  OneButton m_button1;
-  OneButton m_button2;
 
   StatusController m_statusController;
   Display m_display;

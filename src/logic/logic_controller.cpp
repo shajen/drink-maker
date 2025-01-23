@@ -15,10 +15,3 @@ LogicController::LogicController(StatusController& statusController, Display& di
 }
 
 LogicController::~LogicController() = default;
-
-void LogicController::onButton1Click() {}
-void LogicController::onButton2Click() {}
-void LogicController::onButton1LongClick() {}
-void LogicController::onButton2LongClick() {}
-void LogicController::onButton1LongStop() {}
-void LogicController::onButton2LongStop() {}

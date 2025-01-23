@@ -29,38 +29,6 @@ void PouringController::loop(const std::chrono::milliseconds& now) {
   }
 }
 
-void PouringController::onButton1Click() {
-  if (m_mode == Mode::Manual) {
-    startManualPouring();
-  }
-}
-
-void PouringController::onButton2Click() {
-  if (m_mode == Mode::Manual) {
-    startManualPouring();
-  }
-}
-
-void PouringController::onButton1LongClick() {
-  log("pouring", "start venting");
-  m_pumpController.setEnabled(true);
-}
-
-void PouringController::onButton2LongClick() {
-  log("pouring", "start venting");
-  m_pumpController.setEnabled(true);
-}
-
-void PouringController::onButton1LongStop() {
-  log("pouring", "stop venting");
-  m_pumpController.setEnabled(false);
-}
-
-void PouringController::onButton2LongStop() {
-  log("pouring", "stop venting");
-  m_pumpController.setEnabled(false);
-}
-
 void PouringController::loopAuto(const std::chrono::milliseconds& now) {
   const auto status = m_glassDetector.status(now);
   if (status == GlassDetector::Status::Appeared) {

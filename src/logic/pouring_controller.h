@@ -8,12 +8,6 @@ class PouringController : public LogicController {
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
-  void onButton1Click() override;
-  void onButton2Click() override;
-  void onButton1LongClick() override;
-  void onButton2LongClick() override;
-  void onButton1LongStop() override;
-  void onButton2LongStop() override;
 
  private:
   void loopAuto(const std::chrono::milliseconds& now);

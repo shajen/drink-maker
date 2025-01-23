@@ -20,7 +20,6 @@ Parts to print available [here](3d/).
 - 5 V relay module
 - 5 V mini pump
 - 5 V `WS2812` 12 led circle
-- two push buttons
 - silicone tube
 
 ## Pinout
@@ -29,24 +28,14 @@ Parts to print available [here](3d/).
 | -- | --- | --- |
 | I2C SCL | GPIO5 | D1 |
 | I2C SDA | GPIO4 | D2 |
-| Relay | GPIO2 | D4 |
+| Relay | GPIO12 | D5 |
 | WS2812 | GPIO14 | D5 |
-| Button 1 | GPIO0 | D3 |
-| Button 2 | GPIO12 | D6 |
 
 ## Flash
 
 ```
 platformio run -t upload
 ```
-
-## Settings
-
-During splash screen press any button to enter settings mode.
-
-Single click to increase or decrease current value.
-
-Long click to change other settings. 
 
 # Contributing
 
