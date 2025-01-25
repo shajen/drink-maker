@@ -5,8 +5,10 @@
 #include <led_controller.h>
 #include <logic/logic_controller.h>
 #include <pump_controller.h>
+#include <settings.h>
 #include <status_controller.h>
 #include <thread.h>
+#include <wifi_controller.h>
 
 #include <memory>
 
@@ -18,8 +20,12 @@ class MainController : public Thread {
   void loop(const std::chrono::milliseconds& now) override;
 
  private:
-  bool switchDebug();
+  void updateSettingsCallback();
+  void updateLogicController();
 
+  bool m_isSplash;
+  Settings m_settings;
+  WifiController m_wifiController;
   StatusController m_statusController;
   Display m_display;
   GlassDetector m_glassDetector;
@@ -27,5 +33,4 @@ class MainController : public Thread {
   PumpController m_pumpController;
 
   std::unique_ptr<LogicController> m_logicController;
-  bool m_isSplash;
 };

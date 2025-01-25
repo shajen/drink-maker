@@ -2,8 +2,9 @@
 
 using namespace std::chrono_literals;
 
-DebugController::DebugController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
-    : LogicController(statusController, display, glassDetector, ledController, pumpController) {
+DebugController::DebugController(
+    const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
+    : LogicController(settings, statusController, display, glassDetector, ledController, pumpController) {
   m_display.setState(Display::State::Debug);
   m_ledController.setState(LedController::State::Off);
   updateDisplay();

@@ -16,6 +16,14 @@ label {
     align-items: center !important
 }
 
+select {
+    flex: 0 0 35% !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    align-items: center !important
+}
+
 input[type=range] {
     -webkit-appearance: none !important;
     display: flex !important;

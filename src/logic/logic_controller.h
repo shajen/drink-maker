@@ -5,7 +5,7 @@
 #include <led_controller.h>
 #include <logger.h>
 #include <pump_controller.h>
-#include <settings_controller.h>
+#include <settings.h>
 #include <status_controller.h>
 #include <thread.h>
 
@@ -13,17 +13,11 @@
 
 class LogicController : public Thread {
  public:
-  LogicController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
+  LogicController(const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
   virtual ~LogicController();
 
  protected:
-  int m_capacity;
-  int m_distance;
-  int m_brightness;
-  Mode m_mode;
-  std::chrono::milliseconds m_glassDetectionDelay;
-  std::chrono::milliseconds m_glassDisappearDelay;
-
+  const Settings& m_settings;
   StatusController& m_statusController;
   Display& m_display;
   GlassDetector& m_glassDetector;

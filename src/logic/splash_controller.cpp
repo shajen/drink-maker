@@ -1,7 +1,8 @@
 #include <logic/splash_controller.h>
 
-SplashController::SplashController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
-    : LogicController(statusController, display, glassDetector, ledController, pumpController) {
+SplashController::SplashController(
+    const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
+    : LogicController(settings, statusController, display, glassDetector, ledController, pumpController) {
   m_display.setState(Display::State::Splash);
   m_ledController.setState(LedController::State::Splash);
 }

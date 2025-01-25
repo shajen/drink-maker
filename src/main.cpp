@@ -1,7 +1,6 @@
 #include <LittleFS.h>
 #include <logger.h>
 #include <main_controller.h>
-#include <settings_controller.h>
 
 #include <memory>
 
@@ -19,7 +18,6 @@ void setup() {
   Wire.begin(SDA_PIN, SCL_PIN);
   LittleFS.begin();
 
-  SettingsController::setup();
   mainController = std::make_unique<MainController>();
 }
 

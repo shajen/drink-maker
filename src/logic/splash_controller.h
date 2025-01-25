@@ -4,7 +4,7 @@
 
 class SplashController : public LogicController {
  public:
-  SplashController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
+  SplashController(const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
   ~SplashController();
 
   void loop(const std::chrono::milliseconds& now) override;

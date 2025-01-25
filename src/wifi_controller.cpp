@@ -22,7 +22,7 @@ constexpr auto STYLE_URL = "/style.css";
 
 using namespace std::placeholders;
 
-WifiController::WifiController() : m_portal(m_server) {
+WifiController::WifiController(Settings& settings, std::function<void()> updateSettingsCallback) : m_settings(settings), m_updateSettingsCallback(updateSettingsCallback), m_portal(m_server) {
   log(LABEL, "init");
   m_config.ticker = false;
   m_config.apid = SSID;
@@ -40,6 +40,7 @@ WifiController::WifiController() : m_portal(m_server) {
   m_portal.config(m_config);
 
   loadPages();
+  updateSettings();
   m_server.serveStatic(ICON_URL, LittleFS, ICON_URL);
   m_server.serveStatic(STYLE_URL, LittleFS, STYLE_URL);
 
@@ -60,6 +61,23 @@ void WifiController::loop(const std::chrono::milliseconds& now) { m_portal.handl
 void WifiController::loadPages() {
   loadPage(SETTINGS_URL, SETTINGS_FILE, SETTINGS_DATA_FILE);
   loadPage(SAVE_SETTINGS_URL, SAVE_FILE);
+}
+
+void WifiController::updateSettings() {
+  const auto mode = m_portal.aux(SETTINGS_URL)->getElement<AutoConnectSelect>("mode").value();
+  if (mode == "debug") {
+    m_settings.m_mode = Mode::Debug;
+  } else if (mode == "manual") {
+    m_settings.m_mode = Mode::Manual;
+  } else {
+    m_settings.m_mode = Mode::Auto;
+  }
+  m_settings.m_distance = m_portal.aux(SETTINGS_URL)->getElement<AutoConnectRange>("distance").value;
+  m_settings.m_capacity = m_portal.aux(SETTINGS_URL)->getElement<AutoConnectRange>("capacity").value;
+  m_settings.m_brightness = m_portal.aux(SETTINGS_URL)->getElement<AutoConnectRange>("brightness").value;
+  m_settings.m_glassDetectionDelay = std::chrono::milliseconds(m_portal.aux(SETTINGS_URL)->getElement<AutoConnectRange>("glass_detection_delay").value);
+  m_settings.m_glassDisappearDelay = std::chrono::milliseconds(m_portal.aux(SETTINGS_URL)->getElement<AutoConnectRange>("glass_disappear_delay").value);
+  m_updateSettingsCallback();
 }
 
 void WifiController::loadPage(const char* uri, const char* templateFile, const char* dataFile) {
@@ -91,9 +109,10 @@ String WifiController::rootCallback() {
 String WifiController::saveCallback(AutoConnectAux& aux, PageArgument& args) {
   log(LABEL, "save settings");
   File file = LittleFS.open(SETTINGS_DATA_FILE, "w");
-  aux.referer().saveElement(file, {"distance", "capacity", "brightness", "glass_detection_delay", "glass_disappear_delay"});
+  aux.referer().saveElement(file, {"mode", "distance", "capacity", "brightness", "glass_detection_delay", "glass_disappear_delay"});
   file.close();
   aux.redirect(SETTINGS_URL);
+  updateSettings();
   return "";
 }
 
@@ -101,6 +120,7 @@ String WifiController::resetCallback() {
   log(LABEL, "reset");
   LittleFS.remove(SETTINGS_DATA_FILE);
   loadPages();
+  updateSettings();
   return redirect(SETTINGS_URL);
 }
 

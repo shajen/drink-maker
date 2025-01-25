@@ -4,6 +4,18 @@
     "menu": true,
     "element": [
         {
+            "name": "mode",
+            "label": "mode",
+            "type": "ACSelect",
+            "posterior": "div",
+            "value": "auto",
+            "option": [
+                "auto",
+                "manual",
+                "debug"
+            ]
+        },
+        {
             "name": "distance",
             "label": "distance [cm]",
             "type": "ACRange",

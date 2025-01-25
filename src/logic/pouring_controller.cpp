@@ -3,16 +3,17 @@
 
 using namespace std::chrono_literals;
 
-constexpr auto FACTOR = 300ms;	// time need to pour 1 ml
+constexpr auto FACTOR = 300ms;  // time need to pour 1 ml
 constexpr auto FULL_ANIMATION_TIME = 500ms;
 
-PouringController::PouringController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
-    : LogicController(statusController, display, glassDetector, ledController, pumpController), m_counter(0), m_startPouringTime(0) {
+PouringController::PouringController(
+    const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
+    : LogicController(settings, statusController, display, glassDetector, ledController, pumpController), m_counter(0), m_startPouringTime(0) {
   m_display.setState(Display::State::Pouring);
 
-  m_glassDetector.setDetectionDistance(m_distance);
-  m_glassDetector.setGlassDetectionDelay(m_glassDetectionDelay);
-  m_glassDetector.setGlassDisappearDelay(m_glassDisappearDelay);
+  m_glassDetector.setDetectionDistance(m_settings.m_distance);
+  m_glassDetector.setGlassDetectionDelay(m_settings.m_glassDetectionDelay);
+  m_glassDetector.setGlassDisappearDelay(m_settings.m_glassDisappearDelay);
 
   m_ledController.setState(LedController::State::Off);
 
@@ -22,9 +23,9 @@ PouringController::PouringController(StatusController& statusController, Display
 PouringController::~PouringController() = default;
 
 void PouringController::loop(const std::chrono::milliseconds& now) {
-  if (m_mode == Mode::Auto) {
+  if (m_settings.m_mode == Mode::Auto) {
     loopAuto(now);
-  } else if (m_mode == Mode::Manual) {
+  } else if (m_settings.m_mode == Mode::Manual) {
     loopManual(now);
   }
 }
@@ -45,7 +46,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
     m_ledController.setState(LedController::State::Off);
     m_pumpController.setEnabled(false);
   } else if (status == GlassDetector::Status::Detected && m_startPouringTime != 0ms) {
-    const auto pouringTime = m_capacity * FACTOR;
+    const auto pouringTime = m_settings.m_capacity * FACTOR;
     const auto pouringFactor = std::min(1.0f, (now - m_startPouringTime).count() / static_cast<float>(pouringTime.count()));
     const auto remainingTime = pouringTime - (now - m_startPouringTime);
     updateDisplay(remainingTime, pouringFactor);
@@ -61,7 +62,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
 
 void PouringController::loopManual(const std::chrono::milliseconds& now) {
   if (m_startPouringTime != 0ms) {
-    const auto pouringTime = m_capacity * FACTOR;
+    const auto pouringTime = m_settings.m_capacity * FACTOR;
     const auto pouringFactor = std::min(1.0f, (now - m_startPouringTime).count() / static_cast<float>(pouringTime.count()));
     const auto remainingTime = pouringTime - (now - m_startPouringTime);
     updateDisplay(remainingTime, pouringFactor);
@@ -96,10 +97,10 @@ void PouringController::updateDisplay(const std::chrono::milliseconds remainingT
   char line2[100];
   std::ignore = remainingTime;
   sprintf(line1, "%d", m_counter);
-  if (m_mode == Mode::Auto) {
-    sprintf(line2, "%d ml AUTO", m_capacity);
-  } else if (m_mode == Mode::Manual) {
-    sprintf(line2, "%d ml MANUAL", m_capacity);
+  if (m_settings.m_mode == Mode::Auto) {
+    sprintf(line2, "%d ml AUTO", m_settings.m_capacity);
+  } else if (m_settings.m_mode == Mode::Manual) {
+    sprintf(line2, "%d ml MANUAL", m_settings.m_capacity);
   }
   m_display.setPouringData(line1, line2, factor);
 }

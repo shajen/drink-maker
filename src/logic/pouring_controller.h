@@ -4,7 +4,7 @@
 
 class PouringController : public LogicController {
  public:
-  PouringController(StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
+  PouringController(const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
