@@ -1,3 +1,4 @@
+#include <ArduinoOTA.h>
 #include <ESP8266mDNS.h>
 #include <logic/debug_controller.h>
 #include <logic/pouring_controller.h>
@@ -7,6 +8,7 @@
 using namespace std::chrono_literals;
 
 constexpr auto HOSTNAME = "vodka";
+constexpr auto OTA_PASSWORD = "12345678";
 constexpr auto SPLASH_SCREEN_TIME = 2s;
 
 MainController::MainController()
@@ -14,6 +16,9 @@ MainController::MainController()
       m_wifiController(m_settings, std::bind(&MainController::updateSettingsCallback, this)),
       m_logicController(std::make_unique<SplashController>(m_settings, m_statusController, m_display, m_glassDetector, m_ledController, m_pumpController)) {
   m_ledController.setBrightness(m_settings.m_brightness);
+  ArduinoOTA.setHostname(HOSTNAME);
+  ArduinoOTA.setPassword(OTA_PASSWORD);
+  ArduinoOTA.begin();
   MDNS.begin(HOSTNAME);
 }
 
@@ -32,6 +37,7 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_ledController.loop(now);
   m_pumpController.loop(now);
   m_logicController->loop(now);
+  ArduinoOTA.handle();
   MDNS.update();
 }
 
