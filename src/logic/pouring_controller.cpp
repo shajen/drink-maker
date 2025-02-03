@@ -1,10 +1,8 @@
+#include <config.h>
 #include <logger.h>
 #include <logic/pouring_controller.h>
 
 using namespace std::chrono_literals;
-
-constexpr auto FACTOR = 300ms;  // time need to pour 1 ml
-constexpr auto FULL_ANIMATION_TIME = 500ms;
 
 PouringController::PouringController(
     const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
@@ -46,7 +44,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
     m_ledController.setState(LedController::State::Off);
     m_pumpController.setEnabled(false);
   } else if (status == GlassDetector::Status::Detected && m_startPouringTime != 0ms) {
-    const auto pouringTime = m_settings.m_capacity * FACTOR;
+    const auto pouringTime = m_settings.m_capacity * PUMP_FACTOR;
     const auto pouringFactor = std::min(1.0f, (now - m_startPouringTime).count() / static_cast<float>(pouringTime.count()));
     const auto remainingTime = pouringTime - (now - m_startPouringTime);
     updateDisplay(remainingTime, pouringFactor);
@@ -62,7 +60,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
 
 void PouringController::loopManual(const std::chrono::milliseconds& now) {
   if (m_startPouringTime != 0ms) {
-    const auto pouringTime = m_settings.m_capacity * FACTOR;
+    const auto pouringTime = m_settings.m_capacity * PUMP_FACTOR;
     const auto pouringFactor = std::min(1.0f, (now - m_startPouringTime).count() / static_cast<float>(pouringTime.count()));
     const auto remainingTime = pouringTime - (now - m_startPouringTime);
     updateDisplay(remainingTime, pouringFactor);

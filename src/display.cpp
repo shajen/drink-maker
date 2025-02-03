@@ -1,12 +1,6 @@
+#include <config.h>
 #include <display.h>
 #include <logger.h>
-
-constexpr auto LCD_ADDRESS = 0x3C;
-constexpr auto LCD_WIDTH = 128;
-constexpr auto LCD_HEIGHT = 64;
-
-constexpr auto HEIGHT = 16;
-constexpr auto WIDTH = 16;
 
 Display::Display() : m_display(LCD_WIDTH, LCD_HEIGHT, &Wire, -1), m_state(Display::State::Splash), m_needUpdate(true), m_progressHeight(0) {
   m_display.begin(SSD1306_SWITCHCAPVCC, LCD_ADDRESS);
@@ -28,7 +22,7 @@ void Display::loop(const std::chrono::milliseconds& now) {
   if (m_state == State::Splash) {
     m_display.setCursor(15, 0);
     m_display.setTextSize(3);
-    m_display.printf("VODKA");
+    m_display.printf(HOSTNAME);
 
     m_display.setCursor(0, 30);
     m_display.setTextSize(2);
@@ -39,7 +33,7 @@ void Display::loop(const std::chrono::milliseconds& now) {
     m_display.printf("people");
   } else if (m_state == State::Pouring) {
     showStatus();
-    m_display.fillRect(LCD_WIDTH - WIDTH, LCD_HEIGHT - m_progressHeight, WIDTH, m_progressHeight, SSD1306_WHITE);
+    m_display.fillRect(LCD_WIDTH - LCD_WIDTH_STATUS, LCD_HEIGHT - m_progressHeight, LCD_WIDTH_STATUS, m_progressHeight, SSD1306_WHITE);
   } else if (m_state == State::Debug) {
     m_display.setTextSize(2);
 

@@ -1,15 +1,10 @@
 #include <ArduinoOTA.h>
 #include <ESP8266mDNS.h>
+#include <config.h>
 #include <logic/debug_controller.h>
 #include <logic/pouring_controller.h>
 #include <logic/splash_controller.h>
 #include <main_controller.h>
-
-using namespace std::chrono_literals;
-
-constexpr auto HOSTNAME = "vodka";
-constexpr auto OTA_PASSWORD = "12345678";
-constexpr auto SPLASH_SCREEN_TIME = 2s;
 
 MainController::MainController()
     : m_isSplash(true),

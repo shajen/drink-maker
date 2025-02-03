@@ -1,12 +1,9 @@
 #include "wifi_controller.h"
 
+#include <config.h>
 #include <logger.h>
 
 constexpr auto LABEL = "WiFi";
-
-constexpr auto SSID = "Vodka";
-constexpr auto PASSWORD = "12345678";
-constexpr auto NAME = "Vodka";
 
 constexpr auto SAVE_FILE = "/save.json";
 constexpr auto SETTINGS_FILE = "/settings.json";
@@ -30,8 +27,8 @@ WifiController::WifiController(Settings& settings, std::function<void()> updateS
   m_config.homeUri = ROOT_URL;
   m_config.bootUri = AC_ONBOOTURI_HOME;
   m_config.menuItems = 0;
-  m_config.hostName = NAME;
-  m_config.title = NAME;
+  m_config.hostName = HOSTNAME;
+  m_config.title = HOSTNAME;
   m_config.autoRise = false;
   m_config.immediateStart = true;
   m_config.apip = IPAddress(192, 168, 4, 1);

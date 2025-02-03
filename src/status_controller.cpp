@@ -1,8 +1,7 @@
 #include <Arduino.h>
+#include <config.h>
 #include <logger.h>
 #include <status_controller.h>
-
-constexpr auto STATUS_PRINT_INTERVAL = std::chrono::milliseconds(1000);
 
 StatusController::StatusController() : m_frames(0), m_lastPrintStatusTime(0), m_fps(0.0f) {}
 

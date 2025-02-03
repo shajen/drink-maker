@@ -1,8 +1,5 @@
+#include <config.h>
 #include <glass_detector.h>
-
-constexpr auto LOX_ADDRESS = 0x29;
-constexpr auto DEFAULT_DETECTED_TIME = std::chrono::milliseconds(1000);
-constexpr auto DEFAULT_NOT_DETECTED_TIME = std::chrono::milliseconds(100);
 
 GlassDetector::GlassDetector()
     : m_distanceMeter(),
@@ -11,8 +8,8 @@ GlassDetector::GlassDetector()
       m_lastNotDetectedTime(0),
       m_detectionDistance(0),
       m_distance(0),
-      m_glassDetectionDelay(DEFAULT_DETECTED_TIME),
-      m_glassDisappearDelay(DEFAULT_NOT_DETECTED_TIME) {
+      m_glassDetectionDelay(0ms),
+      m_glassDisappearDelay(0ms) {
   m_distanceMeter.begin(LOX_ADDRESS);
   m_distanceMeter.startRangeContinuous();
 }

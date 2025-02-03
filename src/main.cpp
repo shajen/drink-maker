@@ -1,12 +1,9 @@
 #include <LittleFS.h>
+#include <config.h>
 #include <logger.h>
 #include <main_controller.h>
 
 #include <memory>
-
-constexpr auto UART_BAUDRATE = 921600;
-constexpr auto SDA_PIN = 4;
-constexpr auto SCL_PIN = 5;
 
 std::unique_ptr<MainController> mainController;
 
