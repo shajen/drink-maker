@@ -8,6 +8,7 @@
 #include <settings.h>
 #include <status_controller.h>
 #include <thread.h>
+#include <ui_controller.h>
 #include <wifi_controller.h>
 
 #include <memory>
@@ -25,12 +26,13 @@ class MainController : public Thread {
 
   bool m_isSplash;
   Settings m_settings;
-  WifiController m_wifiController;
   StatusController m_statusController;
   Display m_display;
   GlassDetector m_glassDetector;
   LedController m_ledController;
   PumpController m_pumpController;
+  WifiController m_wifiController;
+  UiController m_uiController;
 
   std::unique_ptr<LogicController> m_logicController;
 };

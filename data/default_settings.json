@@ -1,0 +1,8 @@
+{
+    "mode": 1,
+    "distance": 10,
+    "capacity": 30,
+    "brightness": 100,
+    "glass_detection_delay": 3000,
+    "glass_disappear_delay": 50
+}

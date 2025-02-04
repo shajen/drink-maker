@@ -4,6 +4,9 @@
 
 using namespace std::chrono_literals;
 
+constexpr auto DEFAULT_SETTINGS_FILE = "/default_settings.json";
+constexpr auto USER_SETTINGS_FILE = "/user_settings.json";
+
 constexpr auto HOSTNAME = "vodka";
 constexpr auto SSID = "Vodka";
 constexpr auto PASSWORD = "12345678";
@@ -30,4 +33,5 @@ constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
 constexpr auto SPLASH_UPDATE_INTERVAL = 50ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
+constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;
 constexpr auto FULL_ANIMATION_TIME = 500ms;

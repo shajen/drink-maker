@@ -2,4 +2,4 @@
 
 #include <string>
 
-enum class Mode { None, Auto, Manual, Debug };
+enum class Mode { None, Auto, Manual };
