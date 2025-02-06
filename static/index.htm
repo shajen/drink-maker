@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/css/normalize.min.css" />
+  <link rel="stylesheet" href="/css/style.min.css" />
+  <link rel="stylesheet" href="/css/custom.css" />
+
+  <script src="/js/zepto.min.js"></script>
+  <script src="/js/slider.min.js"></script>
+  <script src="/js/graph.min.js"></script>
+  <script src="/js/controls.min.js"></script>
+  <script src="/js/tabbedcontent.min.js"></script>
+</head>
+
+<body onload="javascript:start();">
+  <div class="container">
+    <div>
+      <h4>
+        <img src="/favicon.png" style="height: 1em;">
+        <div id="mainHeader">Control</div>
+        <span id="conStatus" class="label">Offline</span>
+      </h4>
+    </div>
+    <div id="row" class="row u-full-width"></div>
+    <ul id="tabsnav" class="navigation navigation-tabs u-full-width"></ul>
+    <div id="tabscontent" class="tabscontent u-full-width"></div>
+  </div>
+</body>
+
+</html>

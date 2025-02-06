@@ -12,6 +12,7 @@ void setup() {
   log("main", "init");
   log("main", "drink maker v1.0.0");
   Wire.begin(SDA_PIN, SCL_PIN);
+  LittleFS.begin();
 
   mainController = std::make_unique<MainController>();
 }

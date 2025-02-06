@@ -1,0 +1,20 @@
+button {
+    background-color: #6c757d;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+button:active:not(:disabled) {
+    background-color: #495057;
+    transform: none !important;
+}
+
+button:disabled {
+    background-color: #d6d8db;
+    color: #8a8f94;
+    cursor: not-allowed;
+}

@@ -67,7 +67,7 @@ UiController::UiController(Settings& settings, std::function<void()> updateSetti
   m_distance = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Button, "restart", "restart", BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::reboot, this, _1, _2));
 
-  ESPUI.begin(HOSTNAME);
+  ESPUI.beginLITTLEFS(HOSTNAME);
 }
 
 UiController::~UiController() = default;

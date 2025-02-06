@@ -21,14 +21,11 @@ Settings::Settings() {
 void Settings::save() { save(USER_SETTINGS_FILE); }
 
 void Settings::reset() {
-  LittleFS.begin();
   LittleFS.remove(USER_SETTINGS_FILE);
-  LittleFS.end();
   load(DEFAULT_SETTINGS_FILE);
 }
 
 void Settings::load(const char* filename) {
-  LittleFS.begin();
   File file = LittleFS.open(filename, "r");
   if (file) {
     log(LABEL, "reading from file: %s", filename);
@@ -45,11 +42,9 @@ void Settings::load(const char* filename) {
   } else {
     log(LABEL, "can not open file: %s", filename);
   }
-  LittleFS.end();
 }
 
 void Settings::save(const char* filename) {
-  LittleFS.begin();
   File file = LittleFS.open(filename, "w");
   if (file) {
     log(LABEL, "writing to file: %s", filename);
@@ -66,5 +61,4 @@ void Settings::save(const char* filename) {
   } else {
     log(LABEL, "can not open file: %s", filename);
   }
-  LittleFS.end();
 }
