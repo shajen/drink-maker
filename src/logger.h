@@ -4,6 +4,7 @@
 
 #include <string_view>
 
+#ifdef DEBUG
 template <typename... Args>
 void log(std::string_view module, std::string_view fmt, Args... args) {
   const auto now = micros();
@@ -11,3 +12,7 @@ void log(std::string_view module, std::string_view fmt, Args... args) {
   Serial.printf(fmt.data(), args...);
   Serial.printf("\n");
 }
+#else
+template <typename... Args>
+void log(std::string_view, std::string_view, Args...) {}
+#endif
