@@ -1,12 +1,22 @@
 #include <config.h>
 #include <logger.h>
-#include <logic/pouring_controller.h>
+#include <pouring_controller.h>
 
 using namespace std::chrono_literals;
 
+constexpr auto LABEL = "pouring";
+
 PouringController::PouringController(
     const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
-    : LogicController(settings, statusController, display, glassDetector, ledController, pumpController), m_counter(0), m_startPouringTime(0) {
+    : m_settings(settings),
+      m_statusController(statusController),
+      m_display(display),
+      m_glassDetector(glassDetector),
+      m_ledController(ledController),
+      m_pumpController(pumpController),
+      m_counter(0),
+      m_startPouringTime(0) {
+  log(LABEL, "init");
   m_display.setState(Display::State::Pouring);
 
   m_glassDetector.setDetectionDistance(m_settings.m_distance);
@@ -31,7 +41,7 @@ void PouringController::loop(const std::chrono::milliseconds& now) {
 void PouringController::loopAuto(const std::chrono::milliseconds& now) {
   const auto status = m_glassDetector.status(now);
   if (status == GlassDetector::Status::Appeared) {
-    log("pouring", "glass detected");
+    log(LABEL, "glass detected");
     m_counter++;
     m_startPouringTime = now;
     updateDisplay(0ms, 0.0f);
@@ -39,7 +49,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
     m_ledController.setState(LedController::State::Pouring);
     m_pumpController.setEnabled(true);
   } else if (status == GlassDetector::Status::Disappeared) {
-    log("pouring", "glass gone");
+    log(LABEL, "glass gone");
     updateDisplay(0ms, 0.0f);
     m_ledController.setState(LedController::State::Off);
     m_pumpController.setEnabled(false);
@@ -50,7 +60,7 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
     updateDisplay(remainingTime, pouringFactor);
     m_ledController.setPouringData(pouringFactor);
     if (m_startPouringTime + pouringTime <= now) {
-      log("pouring", "glass full");
+      log(LABEL, "glass full");
       m_pumpController.setEnabled(false);
       m_ledController.setState(LedController::State::Full);
       m_startPouringTime = 0ms;
@@ -66,7 +76,7 @@ void PouringController::loopManual(const std::chrono::milliseconds& now) {
     updateDisplay(remainingTime, pouringFactor);
     m_ledController.setPouringData(pouringFactor);
     if (m_startPouringTime + pouringTime <= now) {
-      log("pouring", "glass full");
+      log(LABEL, "glass full");
       m_pumpController.setEnabled(false);
       m_ledController.setState(LedController::State::Full);
       m_startPouringTime = 0ms;
@@ -81,7 +91,10 @@ void PouringController::loopManual(const std::chrono::milliseconds& now) {
 }
 
 void PouringController::startManualPouring() {
-  log("pouring", "start manual pouring");
+  if (m_settings.m_mode != Mode::Manual) {
+    return;
+  }
+  log(LABEL, "start manual pouring");
   m_counter++;
   m_startPouringTime = std::chrono::milliseconds(millis());
   updateDisplay(0ms, 0.0f);

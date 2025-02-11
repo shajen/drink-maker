@@ -3,7 +3,6 @@
 #include <display.h>
 #include <glass_detector.h>
 #include <led_controller.h>
-#include <logic/logic_controller.h>
 #include <pump_controller.h>
 #include <settings.h>
 #include <status_controller.h>
@@ -22,6 +21,7 @@ class MainController : public Thread {
 
  private:
   void updateSettingsCallback();
+  void startManualPouringCallback();
   void updateLogicController();
 
   bool m_isSplash;
@@ -34,5 +34,5 @@ class MainController : public Thread {
   WifiController m_wifiController;
   UiController m_uiController;
 
-  std::unique_ptr<LogicController> m_logicController;
+  std::unique_ptr<Thread> m_logicController;
 };
