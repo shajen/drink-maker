@@ -65,6 +65,9 @@ UiController::UiController(Settings& settings, std::function<void()> updateSetti
   m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime [s]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_heapControl = ESPUI.addControl(ControlType::Label, "free heap [kB]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_distance = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
+  ESPUI.addControl(ControlType::Label, "build time", BUILD_TIME, VIEW_CONTROL_COLOR, debugTab);
+  ESPUI.addControl(ControlType::Label, "version", GIT_TAG, VIEW_CONTROL_COLOR, debugTab);
+  ESPUI.addControl(ControlType::Label, "commit", GIT_COMMIT, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Button, "restart", "restart", BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::reboot, this, _1, _2));
 
   ESPUI.beginLITTLEFS(HOSTNAME);

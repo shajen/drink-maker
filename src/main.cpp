@@ -10,7 +10,7 @@ void setup() {
   Serial.begin(UART_BAUDRATE);
   Serial.printf("\n");
   log("main", "init");
-  log("main", "drink maker v1.0.0");
+  log("main", "hostname: %s, build time: %s, version: %s, commit: %s", HOSTNAME, BUILD_TIME, GIT_TAG, GIT_COMMIT);
   Wire.begin(SDA_PIN, SCL_PIN);
   LittleFS.begin();
 
