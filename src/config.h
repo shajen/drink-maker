@@ -13,7 +13,7 @@ constexpr auto PASSWORD = "12345678";
 constexpr auto OTA_PASSWORD = "12345678";
 constexpr auto SPLASH_SCREEN_TIME = 2s;
 
-constexpr auto UART_BAUDRATE = 921600;
+constexpr auto UART_BAUDRATE = 74880;
 constexpr auto SDA_PIN = 4;
 constexpr auto SCL_PIN = 5;
 
