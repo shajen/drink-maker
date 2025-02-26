@@ -6,12 +6,11 @@
 #include <logger.h>
 #include <pump_controller.h>
 #include <settings.h>
-#include <status_controller.h>
 #include <thread.h>
 
 class PouringController : public Thread {
  public:
-  PouringController(const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
+  PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -23,7 +22,6 @@ class PouringController : public Thread {
   void updateDisplay(const std::chrono::milliseconds remainingTime, float factor);
 
   const Settings& m_settings;
-  StatusController& m_statusController;
   Display& m_display;
   GlassDetector& m_glassDetector;
   LedController& m_ledController;

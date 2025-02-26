@@ -6,16 +6,8 @@ using namespace std::chrono_literals;
 
 constexpr auto LABEL = "pouring";
 
-PouringController::PouringController(
-    const Settings& settings, StatusController& statusController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
-    : m_settings(settings),
-      m_statusController(statusController),
-      m_display(display),
-      m_glassDetector(glassDetector),
-      m_ledController(ledController),
-      m_pumpController(pumpController),
-      m_counter(0),
-      m_startPouringTime(0) {
+PouringController::PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController)
+    : m_settings(settings), m_display(display), m_glassDetector(glassDetector), m_ledController(ledController), m_pumpController(pumpController), m_counter(0), m_startPouringTime(0) {
   log(LABEL, "init");
   m_display.setState(Display::State::Pouring);
 
