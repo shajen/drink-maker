@@ -25,6 +25,7 @@ class MainController : public Thread {
   void updateLogicController();
 
   bool m_isSplash;
+  int m_counter;
   Settings m_settings;
   StatusController m_statusController;
   Display m_display;

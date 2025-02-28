@@ -10,7 +10,7 @@
 
 class PouringController : public Thread {
  public:
-  PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController);
+  PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter);
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -27,7 +27,7 @@ class PouringController : public Thread {
   LedController& m_ledController;
   PumpController& m_pumpController;
 
-  int m_counter;
+  int& m_counter;
   std::chrono::milliseconds m_startPouringTime;
   std::chrono::milliseconds m_startFullAnimationTime;
 };
