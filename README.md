@@ -25,18 +25,32 @@ Parts to print available [here](3d/).
 ## Pinout
 
 | Description | ESP8266 PIN | ESP8266 PIN label |
-| -- | --- | --- |
-| I2C SCL | GPIO5 | D1 |
-| I2C SDA | GPIO4 | D2 |
-| Relay | GPIO12 | D5 |
-| WS2812 | GPIO14 | D5 |
+| ----------- | ----------- | ----------------- |
+| I2C SCL     | GPIO5       | D1                |
+| I2C SDA     | GPIO4       | D2                |
+| Relay       | GPIO12      | D5                |
+| WS2812      | GPIO14      | D5                |
 
 ## Flash
 
 ```
+platformio run -t buildfs
+platformio run -t uploadfs
 platformio run -t upload
 ```
 
+## Settings
+
+Connect your mobile phone or PC to WiFi:  
+network name: `Vodka`  
+password: `12345678`
+
+Then open [http://vodka.local/](http://vodka.local/).
+
+|                   |                   |                   |
+| ----------------- | ----------------- | ----------------- |
+| ![](images/1.png) | ![](images/2.png) | ![](images/3.png) |
+ 
 # Contributing
 
 In general don't be afraid to send pull request. Use the "fork-and-pull" Git workflow.
