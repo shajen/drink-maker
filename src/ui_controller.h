@@ -2,6 +2,7 @@
 
 #include <ESPUI.h>
 #include <Ticker.h>
+#include <battery_controller.h>
 #include <settings.h>
 #include <thread.h>
 
@@ -11,7 +12,8 @@
 
 class UiController : public Thread {
  public:
-  UiController(Settings& settings, std::function<void()> updateSettingsCallback, std::function<int()> getDistanceCallback, std::function<void()> manualPourCallback);
+  UiController(
+      BatteryController& batteryController, Settings& settings, std::function<void()> updateSettingsCallback, std::function<int()> getDistanceCallback, std::function<void()> manualPourCallback);
   ~UiController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -23,6 +25,7 @@ class UiController : public Thread {
   void resetSettings(Control* sender, int type);
   void reboot(Control* sender, int type);
 
+  BatteryController& m_batteryController;
   Settings& m_settings;
   std::function<void()> m_updateSettingsCallback;
   std::function<int()> m_getDistanceCallback;
@@ -36,4 +39,6 @@ class UiController : public Thread {
   uint16_t m_uptimeControl;
   uint16_t m_heapControl;
   uint16_t m_distance;
+  uint16_t m_batteryVoltage;
+  uint16_t m_batteryPercentage;
 };

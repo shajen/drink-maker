@@ -1,5 +1,6 @@
 #pragma once
 
+#include <battery_controller.h>
 #include <display.h>
 #include <glass_detector.h>
 #include <led_controller.h>
@@ -28,6 +29,7 @@ class MainController : public Thread {
   int m_counter;
   Settings m_settings;
   StatusController m_statusController;
+  BatteryController m_batteryController;
   Display m_display;
   GlassDetector m_glassDetector;
   LedController m_ledController;

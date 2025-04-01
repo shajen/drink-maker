@@ -9,7 +9,11 @@ MainController::MainController()
     : m_isSplash(true),
       m_counter(0),
       m_uiController(
-          m_settings, std::bind(&MainController::updateSettingsCallback, this), std::bind(&GlassDetector::getDistance, &m_glassDetector), std::bind(&MainController::startManualPouringCallback, this)),
+          m_batteryController,
+          m_settings,
+          std::bind(&MainController::updateSettingsCallback, this),
+          std::bind(&GlassDetector::getDistance, &m_glassDetector),
+          std::bind(&MainController::startManualPouringCallback, this)),
       m_logicController(std::make_unique<SplashController>(m_display, m_ledController)) {
   m_ledController.setBrightness(m_settings.m_brightness);
   ArduinoOTA.setHostname(HOSTNAME);
@@ -29,6 +33,7 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_wifiController.loop(now);
   m_uiController.loop(now);
   m_statusController.loop(now);
+  m_batteryController.loop(now);
   m_display.loop(now);
   m_glassDetector.loop(now);
   m_ledController.loop(now);

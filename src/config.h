@@ -31,6 +31,11 @@ constexpr auto WS_LEDS_COUNT = 12;
 constexpr auto PUMP_PIN = 12;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
+constexpr auto BATTERY_VOLTAGE_PIN = 17;
+constexpr auto BATTERY_VOLTAGE_DIVIDER_FACTOR = 1.81;
+constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 250ms;
+constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 40;
+
 constexpr auto SPLASH_UPDATE_INTERVAL = 50ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
 constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;

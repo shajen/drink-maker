@@ -20,6 +20,7 @@ Parts to print available [here](3d/).
 - 5 V relay module
 - 5 V mini pump
 - 5 V `WS2812` 12 led circle
+- voltage divider between battery and A0
 - silicone tube
 
 ## Pinout
@@ -30,6 +31,7 @@ Parts to print available [here](3d/).
 | I2C SDA     | GPIO4       | D2                |
 | Relay       | GPIO12      | D5                |
 | WS2812      | GPIO14      | D5                |
+| Battery +   | GPIO17      | A0                |
 
 ## Flash
 
