@@ -10,6 +10,7 @@ MainController::MainController()
       m_counter(0),
       m_uiController(
           m_batteryController,
+          m_statusController,
           m_settings,
           std::bind(&MainController::updateSettingsCallback, this),
           std::bind(&GlassDetector::getDistance, &m_glassDetector),

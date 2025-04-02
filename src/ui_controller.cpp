@@ -45,8 +45,14 @@ uint16_t createSlider(
 }
 
 UiController::UiController(
-    BatteryController& batteryController, Settings& settings, std::function<void()> updateSettingsCallback, std::function<int()> getDistanceCallback, std::function<void()> manualPourCallback)
+    BatteryController& batteryController,
+    StatusController& statusController,
+    Settings& settings,
+    std::function<void()> updateSettingsCallback,
+    std::function<int()> getDistanceCallback,
+    std::function<void()> manualPourCallback)
     : m_batteryController(batteryController),
+      m_statusController(statusController),
       m_settings(settings),
       m_updateSettingsCallback(updateSettingsCallback),
       m_getDistanceCallback(getDistanceCallback),
@@ -74,6 +80,7 @@ UiController::UiController(
   m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime [s]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_heapControl = ESPUI.addControl(ControlType::Label, "free heap [kB]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_distance = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_fps = ESPUI.addControl(ControlType::Label, "fps", "0", VIEW_CONTROL_COLOR, debugTab);
   m_batteryVoltage = ESPUI.addControl(ControlType::Label, "battery [V]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_batteryPercentage = ESPUI.addControl(ControlType::Label, "battery [%]", "0", VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "build time", BUILD_TIME, VIEW_CONTROL_COLOR, debugTab);
@@ -94,6 +101,7 @@ void UiController::loop(const std::chrono::milliseconds& now) {
       ESPUI.updateNumber(m_uptimeControl, std::chrono::duration_cast<std::chrono::seconds>(now).count());
       ESPUI.updateNumber(m_heapControl, ESP.getFreeHeap() / 1024);
       ESPUI.updateNumber(m_distance, m_getDistanceCallback());
+      ESPUI.updateControlValue(m_fps, String(m_statusController.getFps(), 2));
       ESPUI.updateControlValue(m_batteryVoltage, String(m_batteryController.getVoltage(), 2));
       ESPUI.updateNumber(m_batteryPercentage, m_batteryController.getPercentage());
     }

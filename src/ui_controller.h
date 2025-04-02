@@ -4,6 +4,7 @@
 #include <Ticker.h>
 #include <battery_controller.h>
 #include <settings.h>
+#include <status_controller.h>
 #include <thread.h>
 
 #include <chrono>
@@ -13,7 +14,12 @@
 class UiController : public Thread {
  public:
   UiController(
-      BatteryController& batteryController, Settings& settings, std::function<void()> updateSettingsCallback, std::function<int()> getDistanceCallback, std::function<void()> manualPourCallback);
+      BatteryController& batteryController,
+      StatusController& statusController,
+      Settings& settings,
+      std::function<void()> updateSettingsCallback,
+      std::function<int()> getDistanceCallback,
+      std::function<void()> manualPourCallback);
   ~UiController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -26,6 +32,7 @@ class UiController : public Thread {
   void reboot(Control* sender, int type);
 
   BatteryController& m_batteryController;
+  StatusController& m_statusController;
   Settings& m_settings;
   std::function<void()> m_updateSettingsCallback;
   std::function<int()> m_getDistanceCallback;
@@ -39,6 +46,7 @@ class UiController : public Thread {
   uint16_t m_uptimeControl;
   uint16_t m_heapControl;
   uint16_t m_distance;
+  uint16_t m_fps;
   uint16_t m_batteryVoltage;
   uint16_t m_batteryPercentage;
 };
