@@ -40,6 +40,8 @@ void LedController::loop(const std::chrono::milliseconds& now) {
   m_ws.show();
 }
 
+bool LedController::isActive() const { return m_state != State::Off; }
+
 void LedController::setState(const State state) {
   if (m_state != state) {
     m_state = state;

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <config.h>
 #include <thread.h>
 
+#include <array>
 #include <chrono>
 
 class BatteryController : public Thread {
@@ -15,11 +17,12 @@ class BatteryController : public Thread {
   float getPercentage();
 
  private:
-  float getRawVoltage();
+  void readRawVoltage();
+  void update();
 
   std::chrono::milliseconds m_lastReadTime;
   float m_lastVoltage;
   float m_lastPercentage;
-  float m_sum;
-  int m_samples;
+  std::array<int, BATTERY_VOLTAGE_AVEREAGE_SAMPLES> m_samples;
+  int m_sampleCount;
 };

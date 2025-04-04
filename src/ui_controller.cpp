@@ -107,6 +107,7 @@ void UiController::loop(const std::chrono::milliseconds& now) {
     }
   }
 }
+bool UiController::isActive() const { return 0 < ESPUI.WebSocket()->count(); }
 
 void UiController::updateManualPourButton() {
   log(LABEL, "update manual pour: %d", m_settings.m_mode == Mode::Manual);

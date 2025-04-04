@@ -11,6 +11,7 @@ class LedController : public Thread {
   ~LedController();
 
   void loop(const std::chrono::milliseconds& now) override;
+  bool isActive() const;
   void setState(const State state);
   void setPouringData(const float progress);
   void setBrightness(int brightness);

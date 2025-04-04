@@ -1,29 +1,32 @@
 #include "battery_controller.h"
 
 #include <Arduino.h>
-#include <config.h>
+#include <ESP8266WiFi.h>
 #include <helpers.h>
 #include <logger.h>
 
+#include <algorithm>
+
 constexpr auto LABEL = "battery";
 
-BatteryController::BatteryController() : m_lastReadTime(0ms), m_lastVoltage(0.0), m_lastPercentage(0.0), m_sum(0), m_samples(0) {}
+float sampleToVoltage(const int& value) {
+  constexpr auto FACTOR = 1.0 / 1023.0 * 3.2 * BATTERY_VOLTAGE_DIVIDER_FACTOR;
+  return value * FACTOR;
+}
+
+BatteryController::BatteryController() : m_lastReadTime(0ms), m_lastVoltage(sampleToVoltage(analogRead(BATTERY_VOLTAGE_PIN))), m_lastPercentage(voltageToPercentage(m_lastVoltage)), m_sampleCount(0) {}
 
 BatteryController::~BatteryController() = default;
 
 void BatteryController::loop(const std::chrono::milliseconds& now) {
   if (m_lastReadTime + BATTERY_VOLTAGE_READ_INTERVAL <= now) {
     m_lastReadTime = now;
-    m_sum += getRawVoltage();
-    m_samples++;
-  }
+    readRawVoltage();
 
-  if (m_samples == BATTERY_VOLTAGE_AVEREAGE_SAMPLES) {
-    m_lastVoltage = m_sum / m_samples;
-    m_lastPercentage = voltageToPercentage(m_lastVoltage);
-    m_sum = 0;
-    m_samples = 0;
-    log(LABEL, "voltage: %.2f, percentage: %.2f", m_lastVoltage, m_lastPercentage);
+    if (m_sampleCount == BATTERY_VOLTAGE_AVEREAGE_SAMPLES) {
+      update();
+      log(LABEL, "voltage: %.2f, percentage: %.2f", m_lastVoltage, m_lastPercentage);
+    }
   }
 }
 
@@ -31,8 +34,15 @@ float BatteryController::getVoltage() { return m_lastVoltage; }
 
 float BatteryController::getPercentage() { return m_lastPercentage; }
 
-float BatteryController::getRawVoltage() {
-  constexpr auto FACTOR = 1.0 / 1023.0 * 3.2 * BATTERY_VOLTAGE_DIVIDER_FACTOR;
-  const auto rawVoltage = analogRead(BATTERY_VOLTAGE_PIN) * FACTOR;
-  return rawVoltage;
+void BatteryController::readRawVoltage() { m_samples[m_sampleCount++] = analogRead(BATTERY_VOLTAGE_PIN); }
+
+void BatteryController::update() {
+  constexpr auto MIDDLE = BATTERY_VOLTAGE_AVEREAGE_SAMPLES / 2;
+
+  std::nth_element(m_samples.begin(), m_samples.begin() + MIDDLE, m_samples.end());
+  const auto rawVoltage = sampleToVoltage(m_samples[MIDDLE]);
+
+  m_lastVoltage = rawVoltage;
+  m_lastPercentage = voltageToPercentage(m_lastVoltage);
+  m_sampleCount = 0;
 }

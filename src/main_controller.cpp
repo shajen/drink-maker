@@ -31,10 +31,12 @@ void MainController::loop(const std::chrono::milliseconds& now) {
     m_isSplash = false;
   }
 
+  if (!m_ledController.isActive() && !m_uiController.isActive() && !m_pumpController.isActive()) {
+    m_batteryController.loop(now);
+  }
   m_wifiController.loop(now);
   m_uiController.loop(now);
   m_statusController.loop(now);
-  m_batteryController.loop(now);
   m_display.loop(now);
   m_glassDetector.loop(now);
   m_ledController.loop(now);

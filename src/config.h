@@ -33,8 +33,8 @@ constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
 constexpr auto BATTERY_VOLTAGE_PIN = 17;
 constexpr auto BATTERY_VOLTAGE_DIVIDER_FACTOR = 1.81;
-constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 250ms;
-constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 40;
+constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 257ms;
+constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 41;
 
 constexpr auto SPLASH_UPDATE_INTERVAL = 50ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
