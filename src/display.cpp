@@ -34,23 +34,6 @@ void Display::loop(const std::chrono::milliseconds& now) {
   } else if (m_state == State::Pouring) {
     showStatus();
     m_display.fillRect(LCD_WIDTH - LCD_WIDTH_STATUS, LCD_HEIGHT - m_progressHeight, LCD_WIDTH_STATUS, m_progressHeight, SSD1306_WHITE);
-  } else if (m_state == State::Debug) {
-    m_display.setTextSize(2);
-
-    m_display.setCursor(0, 0);
-    m_display.printf("%s", m_editorMode.c_str());
-
-    m_display.setCursor(0, 20);
-    if (m_editorLabel.find('\n') == std::string::npos) {
-      m_display.printf("%s", m_editorLabel.c_str());
-    } else {
-      m_display.setTextSize(1);
-      m_display.printf("%s", m_editorLabel.c_str());
-      m_display.setTextSize(2);
-    }
-
-    m_display.setCursor(0, 40);
-    m_display.printf("%s", m_editorValue.c_str());
   }
   m_display.display();
 }
@@ -68,13 +51,6 @@ void Display::setPouringData(const std::string& line1, const std::string& line2,
     m_progressHeight = progressHeight;
     m_needUpdate = true;
   }
-}
-
-void Display::setEditorData(const std::string& editorMode, const std::string& editorLabel, const std::string& editorValue) {
-  m_editorMode = editorMode;
-  m_editorLabel = editorLabel;
-  m_editorValue = editorValue;
-  m_needUpdate = true;
 }
 
 void Display::showStatus() {
