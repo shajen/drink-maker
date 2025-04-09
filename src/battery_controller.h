@@ -13,8 +13,8 @@ class BatteryController : public Thread {
 
   void loop(const std::chrono::milliseconds& now) override;
 
-  float getVoltage();
-  float getPercentage();
+  float getVoltage() const;
+  float getPercentage() const;
 
  private:
   void readRawVoltage();

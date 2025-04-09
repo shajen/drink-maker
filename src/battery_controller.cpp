@@ -30,9 +30,9 @@ void BatteryController::loop(const std::chrono::milliseconds& now) {
   }
 }
 
-float BatteryController::getVoltage() { return m_lastVoltage; }
+float BatteryController::getVoltage() const { return m_lastVoltage; }
 
-float BatteryController::getPercentage() { return m_lastPercentage; }
+float BatteryController::getPercentage() const { return m_lastPercentage; }
 
 void BatteryController::readRawVoltage() { m_samples[m_sampleCount++] = analogRead(BATTERY_VOLTAGE_PIN); }
 

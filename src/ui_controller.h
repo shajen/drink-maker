@@ -14,7 +14,7 @@
 class UiController : public Thread {
  public:
   UiController(
-      BatteryController& batteryController,
+      const BatteryController& batteryController,
       StatusController& statusController,
       Settings& settings,
       std::function<void()> updateSettingsCallback,
@@ -32,7 +32,7 @@ class UiController : public Thread {
   void resetSettings(Control* sender, int type);
   void reboot(Control* sender, int type);
 
-  BatteryController& m_batteryController;
+  const BatteryController& m_batteryController;
   StatusController& m_statusController;
   Settings& m_settings;
   std::function<void()> m_updateSettingsCallback;

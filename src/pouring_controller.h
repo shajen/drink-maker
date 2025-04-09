@@ -1,5 +1,6 @@
 #pragma once
 
+#include <battery_controller.h>
 #include <display.h>
 #include <glass_detector.h>
 #include <led_controller.h>
@@ -10,7 +11,8 @@
 
 class PouringController : public Thread {
  public:
-  PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter);
+  PouringController(
+      const Settings& settings, const BatteryController& batteryController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter);
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -22,6 +24,7 @@ class PouringController : public Thread {
   void updateDisplay(const std::chrono::milliseconds remainingTime, float factor);
 
   const Settings& m_settings;
+  const BatteryController& m_batteryController;
   Display& m_display;
   GlassDetector& m_glassDetector;
   LedController& m_ledController;

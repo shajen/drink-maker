@@ -6,8 +6,16 @@ using namespace std::chrono_literals;
 
 constexpr auto LABEL = "pouring";
 
-PouringController::PouringController(const Settings& settings, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter)
-    : m_settings(settings), m_display(display), m_glassDetector(glassDetector), m_ledController(ledController), m_pumpController(pumpController), m_counter(counter), m_startPouringTime(0) {
+PouringController::PouringController(
+    const Settings& settings, const BatteryController& batteryController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter)
+    : m_settings(settings),
+      m_batteryController(batteryController),
+      m_display(display),
+      m_glassDetector(glassDetector),
+      m_ledController(ledController),
+      m_pumpController(pumpController),
+      m_counter(counter),
+      m_startPouringTime(0) {
   log(LABEL, "init");
   m_display.setState(Display::State::Pouring);
 
@@ -57,6 +65,8 @@ void PouringController::loopAuto(const std::chrono::milliseconds& now) {
       m_ledController.setState(LedController::State::Full);
       m_startPouringTime = 0ms;
     }
+  } else {
+    updateDisplay(0ms, 0.0f);
   }
 }
 
@@ -74,6 +84,8 @@ void PouringController::loopManual(const std::chrono::milliseconds& now) {
       m_startPouringTime = 0ms;
       m_startFullAnimationTime = now;
     }
+  } else {
+    updateDisplay(0ms, 0.0f);
   }
   if (m_startFullAnimationTime != 0ms && m_startFullAnimationTime + FULL_ANIMATION_TIME <= now) {
     m_ledController.setState(LedController::State::Off);
@@ -101,9 +113,9 @@ void PouringController::updateDisplay(const std::chrono::milliseconds remainingT
   std::ignore = remainingTime;
   sprintf(line1, "%d", m_counter);
   if (m_settings.m_mode == Mode::Auto) {
-    sprintf(line2, "%d ml AUTO", m_settings.m_capacity);
+    sprintf(line2, "%dml %d%% A", m_settings.m_capacity, static_cast<int>(m_batteryController.getPercentage()));
   } else if (m_settings.m_mode == Mode::Manual) {
-    sprintf(line2, "%d ml MANUAL", m_settings.m_capacity);
+    sprintf(line2, "%dml %d%% M", m_settings.m_capacity, static_cast<int>(m_batteryController.getPercentage()));
   }
   m_display.setPouringData(line1, line2, factor);
 }

@@ -45,7 +45,7 @@ uint16_t createSlider(
 }
 
 UiController::UiController(
-    BatteryController& batteryController,
+    const BatteryController& batteryController,
     StatusController& statusController,
     Settings& settings,
     std::function<void()> updateSettingsCallback,
