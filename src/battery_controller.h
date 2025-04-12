@@ -14,7 +14,7 @@ class BatteryController : public Thread {
   void loop(const std::chrono::milliseconds& now) override;
 
   float getVoltage() const;
-  float getPercentage() const;
+  int getPercentage() const;
 
  private:
   void readRawVoltage();
@@ -22,7 +22,7 @@ class BatteryController : public Thread {
 
   std::chrono::milliseconds m_lastReadTime;
   float m_lastVoltage;
-  float m_lastPercentage;
+  int m_lastPercentage;
   std::array<int, BATTERY_VOLTAGE_AVEREAGE_SAMPLES> m_samples;
   int m_sampleCount;
 };

@@ -8,7 +8,7 @@ struct Point {
   float percent;
 };
 
-float voltageToPercentage(const float voltage) {
+int voltageToPercentage(const float voltage) {
   static const std::vector<Point> level = {
       {4.20f, 100.f}, {4.10f, 90.f}, {4.00f, 80.f}, {3.90f, 70.f}, {3.80f, 60.f}, {3.70f, 50.f}, {3.60f, 40.f}, {3.50f, 30.f}, {3.40f, 20.f}, {3.30f, 10.f}, {3.20f, 5.f}, {3.00f, 0.f}};
 
@@ -23,7 +23,7 @@ float voltageToPercentage(const float voltage) {
       float p2 = level[i + 1].percent;
 
       float t = (voltage - v2) / (v1 - v2);
-      return p2 + t * (p1 - p2);
+      return lround(p2 + t * (p1 - p2));
     }
   }
 

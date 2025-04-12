@@ -4,4 +4,4 @@
 
 enum class Mode { None, Auto, Manual };
 
-float voltageToPercentage(const float voltage);
+int voltageToPercentage(const float voltage);

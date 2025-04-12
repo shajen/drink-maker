@@ -113,9 +113,9 @@ void PouringController::updateDisplay(const std::chrono::milliseconds remainingT
   std::ignore = remainingTime;
   sprintf(line1, "%d", m_counter);
   if (m_settings.m_mode == Mode::Auto) {
-    sprintf(line2, "%dml %d%% A", m_settings.m_capacity, static_cast<int>(m_batteryController.getPercentage()));
+    sprintf(line2, "%dml %d%% A", m_settings.m_capacity, m_batteryController.getPercentage());
   } else if (m_settings.m_mode == Mode::Manual) {
-    sprintf(line2, "%dml %d%% M", m_settings.m_capacity, static_cast<int>(m_batteryController.getPercentage()));
+    sprintf(line2, "%dml %d%% M", m_settings.m_capacity, m_batteryController.getPercentage());
   }
   m_display.setPouringData(line1, line2, factor);
 }
