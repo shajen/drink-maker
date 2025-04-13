@@ -43,7 +43,7 @@ void Display::setState(const State state) {
   m_needUpdate = true;
 }
 
-void Display::setPouringData(const std::string& line1, const std::string& line2, float progress) {
+void Display::setPouringData(const ShortStaticString& line1, const ShortStaticString& line2, float progress) {
   const auto progressHeight = static_cast<int>(LCD_HEIGHT * progress);
   if (m_pouringLine1 != line1 || m_pouringLine2 != line2 || progressHeight != m_progressHeight) {
     m_pouringLine1 = line1;
@@ -56,9 +56,9 @@ void Display::setPouringData(const std::string& line1, const std::string& line2,
 void Display::showStatus() {
   m_display.setCursor(0, 0);
   m_display.setTextSize(6);
-  m_display.printf("%s", m_pouringLine1.c_str());
+  m_display.printf("%s", m_pouringLine1.data());
 
   m_display.setCursor(0, 48);
   m_display.setTextSize(2);
-  m_display.printf("%s", m_pouringLine2.c_str());
+  m_display.printf("%s", m_pouringLine2.data());
 }

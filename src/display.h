@@ -16,7 +16,7 @@ class Display : public Thread {
 
   void loop(const std::chrono::milliseconds& now) override;
   void setState(const State state);
-  void setPouringData(const std::string& line1, const std::string& line2, float progress);
+  void setPouringData(const ShortStaticString& line1, const ShortStaticString& line2, float progress);
 
  private:
   void showStatus();
@@ -25,6 +25,6 @@ class Display : public Thread {
   State m_state;
   bool m_needUpdate;
   int m_progressHeight;
-  std::string m_pouringLine1;
-  std::string m_pouringLine2;
+  ShortStaticString m_pouringLine1;
+  ShortStaticString m_pouringLine2;
 };

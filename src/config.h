@@ -40,3 +40,7 @@ constexpr auto SPLASH_UPDATE_INTERVAL = 50ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
 constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;
 constexpr auto FULL_ANIMATION_TIME = 500ms;
+
+constexpr auto SHORT_STRING_SIZE = 20;
+constexpr auto LONG_STRING_SIZE = 500;
+constexpr auto JSON_SIZE = 500;

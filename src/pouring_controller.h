@@ -33,4 +33,6 @@ class PouringController : public Thread {
   int& m_counter;
   std::chrono::milliseconds m_startPouringTime;
   std::chrono::milliseconds m_startFullAnimationTime;
+  ShortStaticString m_line1;
+  ShortStaticString m_line2;
 };

@@ -7,9 +7,9 @@
 
 constexpr auto LABEL = "settings";
 
-String toString(const JsonDocument& json) {
-  String tmp;
-  serializeJson(json, tmp);
+LongStaticString toString(const StaticJsonDocument<JSON_SIZE>& json) {
+  LongStaticString tmp;
+  serializeJson(json, tmp.data(), sizeof(tmp));
   return tmp;
 }
 
@@ -29,7 +29,7 @@ void Settings::load(const char* filename) {
   File file = LittleFS.open(filename, "r");
   if (file) {
     log(LABEL, "reading from file: %s", filename);
-    JsonDocument json;
+    StaticJsonDocument<JSON_SIZE> json;
     deserializeJson(json, file);
     m_mode = static_cast<Mode>(json["mode"].as<int>());
     m_distance = json["distance"].as<int>();
@@ -37,7 +37,7 @@ void Settings::load(const char* filename) {
     m_brightness = json["brightness"].as<int>();
     m_glassDetectionDelay = std::chrono::milliseconds(json["glass_detection_delay"].as<int>());
     m_glassDisappearDelay = std::chrono::milliseconds(json["glass_disappear_delay"].as<int>());
-    log(LABEL, "%s", toString(json).c_str());
+    log(LABEL, "%s", toString(json).data());
     file.close();
   } else {
     log(LABEL, "can not open file: %s", filename);
@@ -48,7 +48,7 @@ void Settings::save(const char* filename) {
   File file = LittleFS.open(filename, "w");
   if (file) {
     log(LABEL, "writing to file: %s", filename);
-    JsonDocument json;
+    StaticJsonDocument<JSON_SIZE> json;
     json["mode"] = static_cast<int>(m_mode);
     json["distance"] = m_distance;
     json["capacity"] = m_capacity;
@@ -56,7 +56,7 @@ void Settings::save(const char* filename) {
     json["glass_detection_delay"] = m_glassDetectionDelay.count();
     json["glass_disappear_delay"] = m_glassDisappearDelay.count();
     serializeJson(json, file);
-    log(LABEL, "%s", toString(json).c_str());
+    log(LABEL, "%s", toString(json).data());
     file.close();
   } else {
     log(LABEL, "can not open file: %s", filename);
