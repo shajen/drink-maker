@@ -1,7 +1,6 @@
 #include "battery_controller.h"
 
 #include <Arduino.h>
-#include <ESP8266WiFi.h>
 #include <helpers.h>
 #include <logger.h>
 

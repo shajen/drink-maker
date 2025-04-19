@@ -2,6 +2,8 @@
 #include <logger.h>
 #include <pouring_controller.h>
 
+#include <cstring>
+
 using namespace std::chrono_literals;
 
 constexpr auto LABEL = "pouring";

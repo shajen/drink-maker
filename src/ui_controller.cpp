@@ -2,7 +2,6 @@
 
 #include <config.h>
 #include <converter.h>
-#include <lock.h>
 #include <logger.h>
 
 using namespace std::placeholders;
@@ -96,7 +95,6 @@ UiController::UiController(
 UiController::~UiController() = default;
 
 void UiController::loop(const std::chrono::milliseconds& now) {
-  Lock lock;
   if (m_lastPrintStatusTime + UI_DEBUG_PRINT_INTERVAL <= now) {
     m_lastPrintStatusTime = now;
     if (m_isDebugTab) {
@@ -109,19 +107,14 @@ void UiController::loop(const std::chrono::milliseconds& now) {
     }
   }
 }
-bool UiController::isActive() const {
-  Lock lock;
-  return 0 < ESPUI.WebSocket()->count();
-}
+bool UiController::isActive() const { return 0 < ESPUI.WebSocket()->count(); }
 
 void UiController::updateManualPourButton() {
-  Lock lock;
   log(LABEL, "update manual pour: %d", m_settings.m_mode == Mode::Manual);
   ESPUI.setEnabled(m_manualPourButton, m_settings.m_mode == Mode::Manual);
 }
 
 void UiController::saveSettings() {
-  Lock lock;
   log(LABEL, "save settings");
   m_settings.save();
   m_updateSettingsCallback();
@@ -132,7 +125,7 @@ void UiController::manualPour(Control* sender, int type) {
   if (type != B_UP) {
     return;
   }
-  Lock lock;
+
   log(LABEL, "manual pour");
   m_manualPourCallback();
 }
@@ -141,7 +134,7 @@ void UiController::resetSettings(Control* sender, int type) {
   if (type != B_UP) {
     return;
   }
-  Lock lock;
+
   log(LABEL, "reset settings");
   m_settings.reset();
   m_updateSettingsCallback();
@@ -155,7 +148,7 @@ void UiController::reboot(Control* sender, int type) {
   if (type != B_UP) {
     return;
   }
-  Lock lock;
+
   log(LABEL, "reboot");
   m_rebootTimer.once(1.0, []() { ESP.restart(); });
 }

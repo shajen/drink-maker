@@ -1,6 +1,6 @@
 #include "wifi_controller.h"
 
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <config.h>
 #include <logger.h>
 

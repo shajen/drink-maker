@@ -1,3 +1,4 @@
+#include <Wire.h>
 #include <config.h>
 #include <logger.h>
 #include <main_controller.h>

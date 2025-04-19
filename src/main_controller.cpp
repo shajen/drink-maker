@@ -1,5 +1,5 @@
 #include <ArduinoOTA.h>
-#include <ESP8266mDNS.h>
+#include <ESPmDNS.h>
 #include <config.h>
 #include <main_controller.h>
 #include <pouring_controller.h>
@@ -43,7 +43,6 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_pumpController.loop(now);
   m_logicController->loop(now);
   ArduinoOTA.handle();
-  MDNS.update();
 }
 
 void MainController::updateSettingsCallback() {
