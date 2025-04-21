@@ -14,7 +14,7 @@ Parts to print available [here](3d/).
 
 ## Needed hardware
 
-- `ESP8266` board with Li-Ion 18650
+- `ESP32 C3 super mini` board with Li-Ion 18650
 - `SSD1306` OLED 0.96" `I2C` 128x64
 - `VL53L0X` time of flight distance sensor `I2C`
 - 5 V relay module
@@ -25,13 +25,13 @@ Parts to print available [here](3d/).
 
 ## Pinout
 
-| Description | ESP8266 PIN | ESP8266 PIN label |
-| ----------- | ----------- | ----------------- |
-| I2C SCL     | GPIO5       | D1                |
-| I2C SDA     | GPIO4       | D2                |
-| Relay       | GPIO12      | D5                |
-| WS2812      | GPIO14      | D5                |
-| Battery +   | GPIO17      | A0                |
+| Description | ESP32 C3 PIN |
+| ----------- | ------------ |
+| I2C SCL     | GPIO7        |
+| I2C SDA     | GPIO6        |
+| Relay       | GPIO4        |
+| WS2812      | GPIO1        |
+| Battery +   | GPIO0        |
 
 ## Flash
 

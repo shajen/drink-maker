@@ -14,8 +14,8 @@ constexpr auto OTA_PASSWORD = "12345678";
 constexpr auto SPLASH_SCREEN_TIME = 2s;
 
 constexpr auto UART_BAUDRATE = 115200;
-constexpr auto SDA_PIN = 21;
-constexpr auto SCL_PIN = 22;
+constexpr auto SDA_PIN = 6;
+constexpr auto SCL_PIN = 7;
 
 constexpr auto LCD_ADDRESS = 0x3C;
 constexpr auto LCD_WIDTH = 128;
@@ -25,13 +25,13 @@ constexpr auto LCD_WIDTH_STATUS = 16;
 
 constexpr auto LOX_ADDRESS = 0x29;
 
-constexpr auto WS_LED_PIN = 33;
+constexpr auto WS_LED_PIN = 1;
 constexpr auto WS_LEDS_COUNT = 12;
 
-constexpr auto PUMP_PIN = 25;
+constexpr auto PUMP_PIN = 4;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
-constexpr auto BATTERY_VOLTAGE_PIN = 32;
+constexpr auto BATTERY_VOLTAGE_PIN = 0;
 constexpr auto BATTERY_VOLTAGE_DIVIDER_FACTOR = 1.81;
 constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 257ms;
 constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 41;
