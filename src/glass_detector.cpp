@@ -1,7 +1,9 @@
 #include <config.h>
 #include <glass_detector.h>
+#include <logger.h>
 
 #include <limits>
+constexpr auto LABEL = "glass";
 
 GlassDetector::GlassDetector()
     : m_distanceMeter(),
@@ -26,6 +28,12 @@ void GlassDetector::loop(const std::chrono::milliseconds& now) {
     } else {
       m_lastNotDetectedTime = now;
     }
+  } else if (m_lastDetectedTime + LOX_MEASURE_TIME <= now && m_lastNotDetectedTime + LOX_MEASURE_TIME <= now) {
+    log(LABEL, "restart");
+    m_lastNotDetectedTime = now;
+    m_distanceMeter.stopRangeContinuous();
+    delay(100);
+    m_distanceMeter.startRangeContinuous(std::chrono::duration_cast<std::chrono::milliseconds>(LOX_MEASURE_TIME).count());
   }
 }
 
