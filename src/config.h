@@ -24,6 +24,7 @@ constexpr auto LCD_HEIGHT_STATUS = 16;
 constexpr auto LCD_WIDTH_STATUS = 16;
 
 constexpr auto LOX_ADDRESS = 0x29;
+constexpr auto LOX_MEASURE_TIME = 500ms;
 
 constexpr auto WS_LED_PIN = 1;
 constexpr auto WS_LEDS_COUNT = 12;

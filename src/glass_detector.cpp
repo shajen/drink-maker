@@ -1,17 +1,19 @@
 #include <config.h>
 #include <glass_detector.h>
 
+#include <limits>
+
 GlassDetector::GlassDetector()
     : m_distanceMeter(),
       m_status(GlassDetector::Status::NotDetected),
       m_lastDetectedTime(0),
       m_lastNotDetectedTime(0),
       m_detectionDistance(0),
-      m_distance(0),
+      m_distance(std::numeric_limits<int>::max()),
       m_glassDetectionDelay(0ms),
       m_glassDisappearDelay(0ms) {
   m_distanceMeter.begin(LOX_ADDRESS);
-  m_distanceMeter.startRangeContinuous();
+  m_distanceMeter.startRangeContinuous(std::chrono::duration_cast<std::chrono::milliseconds>(LOX_MEASURE_TIME).count());
 }
 
 GlassDetector::~GlassDetector() {}
