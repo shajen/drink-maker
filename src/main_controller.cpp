@@ -1,5 +1,6 @@
 #include <ArduinoOTA.h>
 #include <ESPmDNS.h>
+#include <ElegantOTA.h>
 #include <config.h>
 #include <main_controller.h>
 #include <pouring_controller.h>
@@ -21,6 +22,7 @@ MainController::MainController()
   ArduinoOTA.setPassword(OTA_PASSWORD);
   ArduinoOTA.begin();
   MDNS.begin(HOSTNAME);
+  ElegantOTA.begin(ESPUI.WebServer());
 }
 
 MainController::~MainController() {}
@@ -43,6 +45,7 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_pumpController.loop(now);
   m_logicController->loop(now);
   ArduinoOTA.handle();
+  ElegantOTA.loop();
 }
 
 void MainController::updateSettingsCallback() {
