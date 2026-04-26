@@ -11,3 +11,5 @@ using ShortStaticString = std::array<char, SHORT_STRING_SIZE>;
 using LongStaticString = std::array<char, LONG_STRING_SIZE>;
 
 int voltageToPercentage(const float voltage);
+
+ShortStaticString formatDuration(const std::chrono::milliseconds& now);

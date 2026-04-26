@@ -77,7 +77,7 @@ UiController::UiController(
   createSlider(advancedTab, "glass disappear delay [ms]", m_settings.m_glassDisappearDelay, 10, 1000, 10, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   ESPUI.addControl(ControlType::Button, "default settings", "run", DANGER_BUTTON_CONTROL_COLOR, advancedTab, std::bind(&UiController::resetSettings, this, _1, _2));
 
-  m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime [s]", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime", formatDuration(0ms).data(), VIEW_CONTROL_COLOR, debugTab);
   m_heapControl = ESPUI.addControl(ControlType::Label, "free heap [kB]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_distance = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
   m_fps = ESPUI.addControl(ControlType::Label, "fps", "0", VIEW_CONTROL_COLOR, debugTab);
@@ -98,7 +98,7 @@ void UiController::loop(const std::chrono::milliseconds& now) {
   if (m_lastPrintStatusTime + UI_DEBUG_PRINT_INTERVAL <= now) {
     m_lastPrintStatusTime = now;
     if (m_isDebugTab) {
-      ESPUI.updateNumber(m_uptimeControl, std::chrono::duration_cast<std::chrono::seconds>(now).count());
+      ESPUI.updateControlValue(m_uptimeControl, formatDuration(now).data());
       ESPUI.updateNumber(m_heapControl, ESP.getFreeHeap() / 1024);
       ESPUI.updateNumber(m_distance, m_getDistanceCallback());
       ESPUI.updateControlValue(m_fps, String(m_statusController.getFps(), 2));

@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <config.h>
 
+#include <cstring>
+
 struct Point {
   float voltage;
   float percent;
@@ -28,4 +30,15 @@ int voltageToPercentage(const float voltage) {
   }
 
   return 0.f;
+}
+
+ShortStaticString formatDuration(const std::chrono::milliseconds& now) {
+  ShortStaticString buffer;
+  std::memset(buffer.data(), 0, sizeof(buffer));
+  const int milliseconds = now.count() % 1000;
+  const int seconds = (now.count() / 1000) % 60;
+  const int minutes = (now.count() / 60000) % 60;
+  const int hours = (now.count() / 3600000);
+  sprintf(buffer.data(), "%02d:%02d:%02d:%03d", hours, minutes, seconds, milliseconds);
+  return buffer;
 }

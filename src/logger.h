@@ -1,14 +1,15 @@
 #pragma once
 
 #include <Arduino.h>
+#include <helpers.h>
 
 #include <string_view>
 
 #ifdef DEBUG
 template <typename... Args>
 void log(std::string_view module, std::string_view fmt, Args... args) {
-  const auto now = micros();
-  Serial.printf("[%5lu.%06lu] [%8s] ", now / 1000000, now % 1000000, module.data());
+  const auto uptime = formatDuration(std::chrono::milliseconds(millis()));
+  Serial.printf("[%s] [%8s] ", uptime.data(), module.data());
   Serial.printf(fmt.data(), args...);
   Serial.printf("\n");
 }
