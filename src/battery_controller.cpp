@@ -8,12 +8,10 @@
 
 constexpr auto LABEL = "battery";
 
-float sampleToVoltage(const int& value) {
-  constexpr auto FACTOR = 1.0 / 1023.0 * 3.2 * BATTERY_VOLTAGE_DIVIDER_FACTOR;
-  return value * FACTOR;
-}
+float sampleToVoltage(const int& milliVolts) { return static_cast<float>(milliVolts) / 1000.0f * BATTERY_VOLTAGE_DIVIDER_FACTOR; }
 
-BatteryController::BatteryController() : m_lastReadTime(0ms), m_lastVoltage(sampleToVoltage(analogRead(BATTERY_VOLTAGE_PIN))), m_lastPercentage(voltageToPercentage(m_lastVoltage)), m_sampleCount(0) {}
+BatteryController::BatteryController()
+    : m_lastReadTime(0ms), m_lastVoltage(sampleToVoltage(analogReadMilliVolts(BATTERY_VOLTAGE_PIN))), m_lastPercentage(voltageToPercentage(m_lastVoltage)), m_sampleCount(0) {}
 
 BatteryController::~BatteryController() = default;
 
@@ -33,7 +31,7 @@ float BatteryController::getVoltage() const { return m_lastVoltage; }
 
 int BatteryController::getPercentage() const { return m_lastPercentage; }
 
-void BatteryController::readRawVoltage() { m_samples[m_sampleCount++] = analogRead(BATTERY_VOLTAGE_PIN); }
+void BatteryController::readRawVoltage() { m_samples[m_sampleCount++] = analogReadMilliVolts(BATTERY_VOLTAGE_PIN); }
 
 void BatteryController::update() {
   constexpr auto MIDDLE = BATTERY_VOLTAGE_AVEREAGE_SAMPLES / 2;
