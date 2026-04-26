@@ -9,7 +9,7 @@ class GlassDetector : public Thread {
  public:
   enum class Status { Appeared, Detected, Disappeared, NotDetected };
 
-  GlassDetector();
+  GlassDetector(int& errorCount);
   ~GlassDetector();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -25,6 +25,7 @@ class GlassDetector : public Thread {
   Status m_status;
   std::chrono::milliseconds m_lastDetectedTime;
   std::chrono::milliseconds m_lastNotDetectedTime;
+  int& m_errorCount;
   int m_detectionDistance;
   int m_distance;
   std::chrono::milliseconds m_glassDetectionDelay;

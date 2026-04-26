@@ -8,13 +8,14 @@
 
 MainController::MainController()
     : m_isSplash(true),
-      m_counter(0),
+      m_glassDetector(m_uiData.m_distanceErrorCount),
       m_uiController(
           m_batteryController,
           m_statusController,
+          m_glassDetector,
+          m_uiData,
           m_settings,
           std::bind(&MainController::updateSettingsCallback, this),
-          std::bind(&GlassDetector::getDistance, &m_glassDetector),
           std::bind(&MainController::startManualPouringCallback, this)),
       m_logicController(std::make_unique<SplashController>(m_display, m_ledController)) {
   m_ledController.setBrightness(m_settings.m_brightness);
@@ -63,5 +64,5 @@ void MainController::startManualPouringCallback() {
 
 void MainController::updateLogicController() {
   m_ledController.setBrightness(m_settings.m_brightness);
-  m_logicController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_ledController, m_pumpController, m_counter);
+  m_logicController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_ledController, m_pumpController, m_uiData.m_pourCount);
 }

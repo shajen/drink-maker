@@ -44,18 +44,22 @@ uint16_t createSlider(
   return control;
 }
 
+UiData::UiData() : m_pourCount(0), m_distanceErrorCount(0) {}
+
 UiController::UiController(
     const BatteryController& batteryController,
-    StatusController& statusController,
+    const StatusController& statusController,
+    const GlassDetector& glassDetector,
+    const UiData& uiData,
     Settings& settings,
     std::function<void()> updateSettingsCallback,
-    std::function<int()> getDistanceCallback,
     std::function<void()> manualPourCallback)
     : m_batteryController(batteryController),
       m_statusController(statusController),
+      m_glassDetector(glassDetector),
+      m_uiData(uiData),
       m_settings(settings),
       m_updateSettingsCallback(updateSettingsCallback),
-      m_getDistanceCallback(getDistanceCallback),
       m_manualPourCallback(manualPourCallback),
       m_isDebugTab(false),
       m_lastPrintStatusTime(0) {
@@ -79,10 +83,12 @@ UiController::UiController(
 
   m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime", formatDuration(0ms).data(), VIEW_CONTROL_COLOR, debugTab);
   m_heapControl = ESPUI.addControl(ControlType::Label, "free heap [kB]", "0", VIEW_CONTROL_COLOR, debugTab);
-  m_distance = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
-  m_fps = ESPUI.addControl(ControlType::Label, "fps", "0", VIEW_CONTROL_COLOR, debugTab);
-  m_batteryVoltage = ESPUI.addControl(ControlType::Label, "battery [V]", "0", VIEW_CONTROL_COLOR, debugTab);
-  m_batteryPercentage = ESPUI.addControl(ControlType::Label, "battery [%]", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_pourCountControl = ESPUI.addControl(ControlType::Label, "pour count", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_distanceControl = ESPUI.addControl(ControlType::Label, "distance [cm]", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_distanceErrorCountControl = ESPUI.addControl(ControlType::Label, "distance error count", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_fpsControl = ESPUI.addControl(ControlType::Label, "fps", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_batteryVoltageControl = ESPUI.addControl(ControlType::Label, "battery [V]", "0", VIEW_CONTROL_COLOR, debugTab);
+  m_batteryPercentageControl = ESPUI.addControl(ControlType::Label, "battery [%]", "0", VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "build time", BUILD_TIME, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "version", GIT_TAG, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "commit", GIT_COMMIT, VIEW_CONTROL_COLOR, debugTab);
@@ -100,10 +106,12 @@ void UiController::loop(const std::chrono::milliseconds& now) {
     if (m_isDebugTab) {
       ESPUI.updateControlValue(m_uptimeControl, formatDuration(now).data());
       ESPUI.updateNumber(m_heapControl, ESP.getFreeHeap() / 1024);
-      ESPUI.updateNumber(m_distance, m_getDistanceCallback());
-      ESPUI.updateControlValue(m_fps, String(m_statusController.getFps(), 2));
-      ESPUI.updateControlValue(m_batteryVoltage, String(m_batteryController.getVoltage(), 2));
-      ESPUI.updateNumber(m_batteryPercentage, m_batteryController.getPercentage());
+      ESPUI.updateNumber(m_pourCountControl, m_uiData.m_pourCount);
+      ESPUI.updateNumber(m_distanceControl, m_glassDetector.getDistance());
+      ESPUI.updateNumber(m_distanceErrorCountControl, m_uiData.m_distanceErrorCount);
+      ESPUI.updateControlValue(m_fpsControl, String(m_statusController.getFps(), 2));
+      ESPUI.updateControlValue(m_batteryVoltageControl, String(m_batteryController.getVoltage(), 2));
+      ESPUI.updateNumber(m_batteryPercentageControl, m_batteryController.getPercentage());
     }
   }
 }

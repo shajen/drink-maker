@@ -5,11 +5,12 @@
 #include <limits>
 constexpr auto LABEL = "glass";
 
-GlassDetector::GlassDetector()
+GlassDetector::GlassDetector(int& errorCount)
     : m_distanceMeter(),
       m_status(GlassDetector::Status::NotDetected),
       m_lastDetectedTime(0),
       m_lastNotDetectedTime(0),
+      m_errorCount(errorCount),
       m_detectionDistance(0),
       m_distance(std::numeric_limits<int>::max()),
       m_glassDetectionDelay(0ms),
@@ -30,6 +31,7 @@ void GlassDetector::loop(const std::chrono::milliseconds& now) {
     }
   } else if (m_lastDetectedTime + LOX_MEASURE_TIME <= now && m_lastNotDetectedTime + LOX_MEASURE_TIME <= now) {
     log(LABEL, "restart");
+    m_errorCount++;
     m_lastNotDetectedTime = now;
     m_distanceMeter.stopRangeContinuous();
     delay(100);
