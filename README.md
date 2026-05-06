@@ -29,7 +29,7 @@ Parts to print available [here](3d/).
 | ----------- | ------------ |
 | I2C SCL     | GPIO7        |
 | I2C SDA     | GPIO6        |
-| Relay       | GPIO4        |
+| Relay       | GPIO0        |
 | WS2812      | GPIO1        |
 | Battery +   | GPIO0        |
 

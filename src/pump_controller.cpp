@@ -5,7 +5,7 @@
 
 PumpController::PumpController() : m_isActive(false) {
   pinMode(PUMP_PIN, OUTPUT);
-  digitalWrite(PUMP_PIN, true);
+  digitalWrite(PUMP_PIN, false);
 }
 
 PumpController::~PumpController() {}
@@ -17,5 +17,5 @@ bool PumpController::isActive() const { return m_isActive; }
 void PumpController::setEnabled(bool enabled) {
   log("pump", enabled ? "start" : "stop");
   m_isActive = enabled;
-  digitalWrite(PUMP_PIN, !enabled);
+  digitalWrite(PUMP_PIN, enabled);
 }

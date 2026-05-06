@@ -28,7 +28,7 @@ constexpr auto LOX_MEASURE_TIME = 500ms;
 constexpr auto WS_LED_PIN = 1;
 constexpr auto WS_LEDS_COUNT = 12;
 
-constexpr auto PUMP_PIN = 4;
+constexpr auto PUMP_PIN = 0;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
 constexpr auto BATTERY_VOLTAGE_PIN = 0;
