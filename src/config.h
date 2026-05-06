@@ -13,8 +13,8 @@ constexpr auto PASSWORD = "12345678";
 constexpr auto OTA_PASSWORD = "12345678";
 
 constexpr auto UART_BAUDRATE = 115200;
-constexpr auto SDA_PIN = 6;
-constexpr auto SCL_PIN = 7;
+constexpr auto SDA_PIN = 8;
+constexpr auto SCL_PIN = 9;
 
 constexpr auto LCD_ADDRESS = 0x3C;
 constexpr auto LCD_WIDTH = 128;

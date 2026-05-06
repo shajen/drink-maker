@@ -27,8 +27,8 @@ Parts to print available [here](3d/).
 
 | Description | ESP32 C3 PIN |
 | ----------- | ------------ |
-| I2C SCL     | GPIO7        |
-| I2C SDA     | GPIO6        |
+| I2C SCL     | GPIO9        |
+| I2C SDA     | GPIO8        |
 | Relay       | GPIO0        |
 | WS2812      | GPIO1        |
 | Battery +   | GPIO0        |
