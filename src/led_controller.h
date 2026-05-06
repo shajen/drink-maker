@@ -21,6 +21,4 @@ class LedController : public Thread {
   State m_state;
   bool m_needUpdate;
   float m_progress;
-  int m_splashLastLed;
-  std::chrono::milliseconds m_splashLastUpdate;
 };

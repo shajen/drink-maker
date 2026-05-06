@@ -11,7 +11,6 @@ constexpr auto HOSTNAME = "vodka";
 constexpr auto SSID = "Vodka";
 constexpr auto PASSWORD = "12345678";
 constexpr auto OTA_PASSWORD = "12345678";
-constexpr auto SPLASH_SCREEN_TIME = 2s;
 
 constexpr auto UART_BAUDRATE = 115200;
 constexpr auto SDA_PIN = 6;
@@ -37,7 +36,8 @@ constexpr auto BATTERY_VOLTAGE_DIVIDER_FACTOR = 1.5;
 constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 257ms;
 constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 41;
 
-constexpr auto SPLASH_UPDATE_INTERVAL = 50ms;
+constexpr auto SPLASH_SCREEN_TIME = std::chrono::milliseconds(512 * 6);
+constexpr auto SPLASH_UPDATE_INTERVAL = 100ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
 constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;
 constexpr auto FULL_ANIMATION_TIME = 500ms;
