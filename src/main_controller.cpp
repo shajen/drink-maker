@@ -17,8 +17,7 @@ MainController::MainController()
           m_settings,
           std::bind(&MainController::updateSettingsCallback, this),
           std::bind(&MainController::startManualPouringCallback, this)),
-      m_logicController(std::make_unique<SplashController>(m_display, m_ledController)) {
-  m_ledController.setBrightness(m_settings.m_brightness);
+      m_logicController(std::make_unique<SplashController>(m_display)) {
   ArduinoOTA.setHostname(HOSTNAME);
   ArduinoOTA.setPassword(OTA_PASSWORD);
   ArduinoOTA.begin();
@@ -34,7 +33,7 @@ void MainController::loop(const std::chrono::milliseconds& now) {
     m_isSplash = false;
   }
 
-  if (!m_ledController.isActive() && !m_uiController.isActive() && !m_pumpController.isActive()) {
+  if (!m_uiController.isActive() && !m_pumpController.isActive()) {
     m_batteryController.loop(now);
   }
   m_wifiController.loop(now);
@@ -42,7 +41,6 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_statusController.loop(now);
   m_display.loop(now);
   m_glassDetector.loop(now);
-  m_ledController.loop(now);
   m_pumpController.loop(now);
   m_logicController->loop(now);
   ArduinoOTA.handle();
@@ -63,6 +61,5 @@ void MainController::startManualPouringCallback() {
 }
 
 void MainController::updateLogicController() {
-  m_ledController.setBrightness(m_settings.m_brightness);
-  m_logicController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_ledController, m_pumpController, m_uiData.m_pourCount);
+  m_logicController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_pumpController, m_uiData.m_pourCount);
 }

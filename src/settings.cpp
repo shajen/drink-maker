@@ -34,7 +34,6 @@ void Settings::load(const char* filename) {
     m_mode = static_cast<Mode>(json["mode"].as<int>());
     m_distance = json["distance"].as<int>();
     m_capacity = json["capacity"].as<int>();
-    m_brightness = json["brightness"].as<int>();
     m_glassDetectionDelay = std::chrono::milliseconds(json["glass_detection_delay"].as<int>());
     m_glassDisappearDelay = std::chrono::milliseconds(json["glass_disappear_delay"].as<int>());
     log(LABEL, "%s", toString(json).data());
@@ -52,7 +51,6 @@ void Settings::save(const char* filename) {
     json["mode"] = static_cast<int>(m_mode);
     json["distance"] = m_distance;
     json["capacity"] = m_capacity;
-    json["brightness"] = m_brightness;
     json["glass_detection_delay"] = m_glassDetectionDelay.count();
     json["glass_disappear_delay"] = m_glassDisappearDelay.count();
     serializeJson(json, file);

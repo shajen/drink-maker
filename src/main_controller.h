@@ -3,7 +3,6 @@
 #include <battery_controller.h>
 #include <display.h>
 #include <glass_detector.h>
-#include <led_controller.h>
 #include <pump_controller.h>
 #include <settings.h>
 #include <status_controller.h>
@@ -32,7 +31,6 @@ class MainController : public Thread {
   BatteryController m_batteryController;
   Display m_display;
   GlassDetector m_glassDetector;
-  LedController m_ledController;
   PumpController m_pumpController;
   WifiController m_wifiController;
   UiController m_uiController;

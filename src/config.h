@@ -25,9 +25,6 @@ constexpr auto LCD_WIDTH_STATUS = 16;
 constexpr auto LOX_ADDRESS = 0x29;
 constexpr auto LOX_MEASURE_TIME = 500ms;
 
-constexpr auto WS_LED_PIN = 1;
-constexpr auto WS_LEDS_COUNT = 12;
-
 constexpr auto PUMP_PIN = 0;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 

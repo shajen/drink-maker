@@ -3,7 +3,6 @@
 #include <battery_controller.h>
 #include <display.h>
 #include <glass_detector.h>
-#include <led_controller.h>
 #include <logger.h>
 #include <pump_controller.h>
 #include <settings.h>
@@ -11,8 +10,7 @@
 
 class PouringController : public Thread {
  public:
-  PouringController(
-      const Settings& settings, const BatteryController& batteryController, Display& display, GlassDetector& glassDetector, LedController& ledController, PumpController& pumpController, int& counter);
+  PouringController(const Settings& settings, const BatteryController& batteryController, Display& display, GlassDetector& glassDetector, PumpController& pumpController, int& counter);
   ~PouringController();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -27,7 +25,6 @@ class PouringController : public Thread {
   const BatteryController& m_batteryController;
   Display& m_display;
   GlassDetector& m_glassDetector;
-  LedController& m_ledController;
   PumpController& m_pumpController;
 
   int& m_counter;

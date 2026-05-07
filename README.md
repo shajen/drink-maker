@@ -19,7 +19,6 @@ Parts to print available [here](3d/).
 - `VL53L0X` time of flight distance sensor `I2C`
 - 5 V relay module
 - 5 V mini pump
-- 5 V `WS2812` 12 led circle
 - voltage divider between battery and A0
 - silicone tube
 
@@ -30,7 +29,6 @@ Parts to print available [here](3d/).
 | I2C SCL     | GPIO9        |
 | I2C SDA     | GPIO8        |
 | Relay       | GPIO0        |
-| WS2812      | GPIO1        |
 | Battery +   | GPIO0        |
 
 ## Flash
