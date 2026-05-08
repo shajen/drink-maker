@@ -28,6 +28,7 @@ MainController::MainController()
 MainController::~MainController() {}
 
 void MainController::loop(const std::chrono::milliseconds& now) {
+  std::unique_lock<std::mutex> lock(m_mutex);
   if (m_isSplash && SPLASH_SCREEN_TIME <= now) {
     updateLogicController();
     m_isSplash = false;
@@ -48,12 +49,14 @@ void MainController::loop(const std::chrono::milliseconds& now) {
 }
 
 void MainController::updateSettingsCallback() {
+  std::unique_lock<std::mutex> lock(m_mutex);
   if (!m_isSplash) {
     updateLogicController();
   }
 }
 
 void MainController::startManualPouringCallback() {
+  std::unique_lock<std::mutex> lock(m_mutex);
   auto pouringController = reinterpret_cast<PouringController*>(m_logicController.get());
   if (pouringController) {
     pouringController->startManualPouring();

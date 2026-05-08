@@ -11,6 +11,7 @@
 #include <wifi_controller.h>
 
 #include <memory>
+#include <mutex>
 
 class MainController : public Thread {
  public:
@@ -36,4 +37,5 @@ class MainController : public Thread {
   UiController m_uiController;
 
   std::unique_ptr<Thread> m_logicController;
+  std::mutex m_mutex;
 };
