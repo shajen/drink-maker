@@ -30,11 +30,6 @@ constexpr auto LOX_MEASURE_TIME = 500ms;
 constexpr auto PUMP_PIN = 0;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
-constexpr auto BATTERY_VOLTAGE_PIN = 0;
-constexpr auto BATTERY_VOLTAGE_DIVIDER_FACTOR = 1.5;
-constexpr auto BATTERY_VOLTAGE_READ_INTERVAL = 257ms;
-constexpr auto BATTERY_VOLTAGE_AVEREAGE_SAMPLES = 41;
-
 constexpr auto SPLASH_SCREEN_TIME = std::chrono::milliseconds(512 * 6);
 constexpr auto SPLASH_UPDATE_INTERVAL = 100ms;
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;

@@ -22,7 +22,7 @@ struct UiData {
 class UiController : public Thread {
  public:
   UiController(
-      const BatteryController& batteryController,
+      BatteryController& batteryController,
       const StatusController& statusController,
       const GlassDetector& glassDetector,
       const UiData& uiData,
@@ -39,9 +39,10 @@ class UiController : public Thread {
   void saveSettings();
   void manualPour(Control* sender, int type);
   void resetSettings(Control* sender, int type);
+  void batteryReset(Control* sender, int type);
   void reboot(Control* sender, int type);
 
-  const BatteryController& m_batteryController;
+  BatteryController& m_batteryController;
   const StatusController& m_statusController;
   const GlassDetector& m_glassDetector;
   const UiData& m_uiData;

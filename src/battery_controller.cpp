@@ -1,6 +1,7 @@
 #include "battery_controller.h"
 
 #include <Arduino.h>
+#include <MAX17043.h>
 #include <helpers.h>
 #include <logger.h>
 
@@ -8,38 +9,29 @@
 
 constexpr auto LABEL = "battery";
 
-float sampleToVoltage(const int& milliVolts) { return static_cast<float>(milliVolts) / 1000.0f * BATTERY_VOLTAGE_DIVIDER_FACTOR; }
-
-BatteryController::BatteryController()
-    : m_lastReadTime(0ms), m_lastVoltage(sampleToVoltage(analogReadMilliVolts(BATTERY_VOLTAGE_PIN))), m_lastPercentage(voltageToPercentage(m_lastVoltage)), m_sampleCount(0) {}
+BatteryController::BatteryController() : m_lastVoltage(0.0f), m_lastPercentage(0) {
+  if (FuelGauge.begin()) {
+    log(LABEL, "success, version: %d", FuelGauge.version());
+  } else {
+    log(LABEL, "error");
+  }
+}
 
 BatteryController::~BatteryController() = default;
 
 void BatteryController::loop(const std::chrono::milliseconds& now) {
-  if (m_lastReadTime + BATTERY_VOLTAGE_READ_INTERVAL <= now) {
-    m_lastReadTime = now;
-    readRawVoltage();
+  m_lastVoltage = FuelGauge.voltage() / 1000.0f;
+  m_lastPercentage = FuelGauge.percent();
+}
 
-    if (m_sampleCount == BATTERY_VOLTAGE_AVEREAGE_SAMPLES) {
-      update();
-      log(LABEL, "voltage: %.2f, percentage: %.2f", m_lastVoltage, m_lastPercentage);
-    }
-  }
+void BatteryController::reset() {
+  log(LABEL, "reset");
+  FuelGauge.reset();
+  delay(250);
+  FuelGauge.quickstart();
+  delay(250);
 }
 
 float BatteryController::getVoltage() const { return m_lastVoltage; }
 
 int BatteryController::getPercentage() const { return m_lastPercentage; }
-
-void BatteryController::readRawVoltage() { m_samples[m_sampleCount++] = analogReadMilliVolts(BATTERY_VOLTAGE_PIN); }
-
-void BatteryController::update() {
-  constexpr auto MIDDLE = BATTERY_VOLTAGE_AVEREAGE_SAMPLES / 2;
-
-  std::nth_element(m_samples.begin(), m_samples.begin() + MIDDLE, m_samples.end());
-  const auto rawVoltage = sampleToVoltage(m_samples[MIDDLE]);
-
-  m_lastVoltage = rawVoltage;
-  m_lastPercentage = voltageToPercentage(m_lastVoltage);
-  m_sampleCount = 0;
-}

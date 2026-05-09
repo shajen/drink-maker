@@ -47,7 +47,7 @@ uint16_t createSlider(
 UiData::UiData() : m_pourCount(0), m_distanceErrorCount(0) {}
 
 UiController::UiController(
-    const BatteryController& batteryController,
+    BatteryController& batteryController,
     const StatusController& statusController,
     const GlassDetector& glassDetector,
     const UiData& uiData,
@@ -91,6 +91,7 @@ UiController::UiController(
   ESPUI.addControl(ControlType::Label, "build time", BUILD_TIME, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "version", GIT_TAG, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "commit", GIT_COMMIT, VIEW_CONTROL_COLOR, debugTab);
+  ESPUI.addControl(ControlType::Button, "battery reset", "run", DANGER_BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::batteryReset, this, _1, _2));
   ESPUI.addControl(ControlType::Button, "restart", "run", DANGER_BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::reboot, this, _1, _2));
 
   ESPUI.beginLITTLEFS(HOSTNAME);
@@ -149,6 +150,15 @@ void UiController::resetSettings(Control* sender, int type) {
     callback();
   }
   updateManualPourButton();
+}
+
+void UiController::batteryReset(Control* sender, int type) {
+  if (type != B_UP) {
+    return;
+  }
+
+  log(LABEL, "battery reset");
+  m_batteryController.reset();
 }
 
 void UiController::reboot(Control* sender, int type) {

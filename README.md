@@ -17,6 +17,7 @@ Parts to print available [here](3d/).
 - `ESP32 C3 super mini` board with Li-Ion 18650
 - `ST7789` OLED 2.0" `SPI` 240x320
 - `VL53L0X` time of flight distance sensor `I2C`
+- `MAX17043` battery fuel gauge `I2C`
 - 5 V relay module
 - 5 V mini pump
 - voltage divider between battery and A0
@@ -29,7 +30,6 @@ Parts to print available [here](3d/).
 | I2C SCL     | GPIO9        |
 | I2C SDA     | GPIO8        |
 | Relay       | GPIO0        |
-| Battery +   | GPIO0        |
 | LCD CS      | GPIO5        |
 | LCD DC      | GPIO6        |
 | LCD MOSI    | GPIO10       |

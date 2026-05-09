@@ -13,16 +13,12 @@ class BatteryController : public Thread {
 
   void loop(const std::chrono::milliseconds& now) override;
 
+  void reset();
+
   float getVoltage() const;
   int getPercentage() const;
 
  private:
-  void readRawVoltage();
-  void update();
-
-  std::chrono::milliseconds m_lastReadTime;
   float m_lastVoltage;
   int m_lastPercentage;
-  std::array<int, BATTERY_VOLTAGE_AVEREAGE_SAMPLES> m_samples;
-  int m_sampleCount;
 };
