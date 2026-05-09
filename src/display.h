@@ -1,7 +1,9 @@
 #pragma once
 
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_ST7789.h>
+#include <battery_controller.h>
 #include <helpers.h>
+#include <settings.h>
 #include <thread.h>
 
 #include <chrono>
@@ -11,20 +13,20 @@ class Display : public Thread {
  public:
   enum class State { Splash, Pouring };
 
-  Display();
+  Display(const Settings& settings, const BatteryController& batteryController);
   ~Display();
 
   void loop(const std::chrono::milliseconds& now) override;
   void setState(const State state);
-  void setPouringData(const ShortStaticString& line1, const ShortStaticString& line2, float progress);
+  void setPouringData(const int counter, const float progress);
 
  private:
-  void showStatus();
-
-  Adafruit_SSD1306 m_display;
+  Adafruit_ST7789 m_display;
   State m_state;
-  bool m_needUpdate;
-  int m_progressHeight;
-  ShortStaticString m_pouringLine1;
-  ShortStaticString m_pouringLine2;
+  const Settings& m_settings;
+  const BatteryController& m_batteryController;
+  ShortStaticString m_capacityData;
+  ShortStaticString m_batteryData;
+  ShortStaticString m_modeData;
+  ShortStaticString m_counterData;
 };
