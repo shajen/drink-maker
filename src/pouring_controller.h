@@ -29,5 +29,4 @@ class PouringController : public Thread {
 
   int& m_counter;
   std::chrono::milliseconds m_startPouringTime;
-  std::chrono::milliseconds m_startFullAnimationTime;
 };

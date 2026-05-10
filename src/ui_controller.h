@@ -32,7 +32,6 @@ class UiController : public Thread {
   ~UiController();
 
   void loop(const std::chrono::milliseconds& now) override;
-  bool isActive() const;
 
  private:
   void updateManualPourButton();

@@ -8,9 +8,5 @@ class PumpController : public Thread {
   ~PumpController();
 
   void loop(const std::chrono::milliseconds& now) override;
-  bool isActive() const;
   void setEnabled(bool enabled);
-
- private:
-  bool m_isActive;
 };

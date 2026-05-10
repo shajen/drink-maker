@@ -67,14 +67,9 @@ void PouringController::loopManual(const std::chrono::milliseconds& now) {
       log(LABEL, "glass full");
       m_pumpController.setEnabled(false);
       m_startPouringTime = 0ms;
-      m_startFullAnimationTime = now;
     }
   } else {
     updateDisplay(0ms, 0.0f);
-  }
-  if (m_startFullAnimationTime != 0ms && m_startFullAnimationTime + FULL_ANIMATION_TIME <= now) {
-    updateDisplay(0ms, 0.0f);
-    m_startFullAnimationTime = 0ms;
   }
 }
 

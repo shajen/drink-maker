@@ -30,11 +30,9 @@ constexpr auto LOX_MEASURE_TIME = 500ms;
 constexpr auto PUMP_PIN = 0;
 constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
-constexpr auto SPLASH_SCREEN_TIME = std::chrono::milliseconds(512 * 6);
-constexpr auto SPLASH_UPDATE_INTERVAL = 100ms;
+constexpr auto SPLASH_SCREEN_TIME = std::chrono::seconds(3);
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
 constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;
-constexpr auto FULL_ANIMATION_TIME = 500ms;
 
 constexpr auto SHORT_STRING_SIZE = 20;
 constexpr auto LONG_STRING_SIZE = 500;
