@@ -36,6 +36,9 @@ void Settings::load(const char* filename) {
     m_capacity = json["capacity"].as<int>();
     m_glassDetectionDelay = std::chrono::milliseconds(json["glass_detection_delay"].as<int>());
     m_glassDisappearDelay = std::chrono::milliseconds(json["glass_disappear_delay"].as<int>());
+    m_backgroundColor = json["background_color"].as<std::string>();
+    m_primaryColor = json["primary_color"].as<std::string>();
+    m_secondaryColor = json["secondary_color"].as<std::string>();
     log(LABEL, "%s", toString(json).data());
     file.close();
   } else {
@@ -53,6 +56,9 @@ void Settings::save(const char* filename) {
     json["capacity"] = m_capacity;
     json["glass_detection_delay"] = m_glassDetectionDelay.count();
     json["glass_disappear_delay"] = m_glassDisappearDelay.count();
+    json["background_color"] = m_backgroundColor;
+    json["primary_color"] = m_primaryColor;
+    json["secondary_color"] = m_secondaryColor;
     serializeJson(json, file);
     log(LABEL, "%s", toString(json).data());
     file.close();

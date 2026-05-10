@@ -13,6 +13,9 @@ class Settings {
   int m_capacity;
   std::chrono::milliseconds m_glassDetectionDelay;
   std::chrono::milliseconds m_glassDisappearDelay;
+  std::string m_backgroundColor;
+  std::string m_primaryColor;
+  std::string m_secondaryColor;
   void save();
   void reset();
 

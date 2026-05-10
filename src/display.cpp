@@ -6,21 +6,90 @@
 
 constexpr auto MARGIN = 2;
 constexpr auto WIDTH_STATUS = 32;
-constexpr auto BACKGROUND = ST77XX_WHITE;
 
-constexpr auto NONE = 0;
 constexpr auto X_CENTER = 2;
 constexpr auto Y_CENTER = 4;
 
-struct TextBounds {
-  int16_t x, y;
-  uint16_t width, height;
-};
+Display::Display(const Settings& settings, const BatteryController& batteryController) : m_display(LCD_CS, LCD_DC, LCD_RST), m_settings(settings), m_batteryController(batteryController) {
+  SPI.begin(LCD_SCLK, -1, LCD_MOSI, -1);
+  SPI.setFrequency(40000000);
+  m_display.init(LCD_HEIGHT, LCD_WIDTH);
+  m_display.setRotation(1);
+  m_display.setTextWrap(false);
 
-TextBounds getTextBounds(Adafruit_ST7789& display, const int x, const int y, const char* text, const uint8_t size, const uint8_t alignment) {
+  clear();
+}
+
+Display::~Display() {}
+
+void Display::loop(const std::chrono::milliseconds& now) {
+  if (m_state == State::Pouring) {
+    ShortStaticString capacityData;
+    ShortStaticString batteryData;
+    ShortStaticString modeData;
+
+    sprintf(capacityData.data(), "%d ml", m_settings.m_capacity);
+    sprintf(batteryData.data(), "%d %%", m_batteryController.getPercentage());
+    sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MANUAL");
+
+    drawText(MARGIN, MARGIN, m_capacityData.data(), capacityData.data(), 3, m_secondaryColor, 0);
+    drawText(-MARGIN - WIDTH_STATUS, MARGIN, m_batteryData.data(), batteryData.data(), 3, m_secondaryColor, 0);
+    drawText(MARGIN, -MARGIN, m_modeData.data(), modeData.data(), 3, m_secondaryColor, 0);
+
+    m_capacityData = capacityData;
+    m_batteryData = batteryData;
+    m_modeData = modeData;
+  }
+}
+
+void Display::setState(const State state) {
+  if (m_state == state) {
+    return;
+  }
+
+  m_state = state;
+  m_display.fillScreen(m_backgroundColor);
+  if (state == State::Splash) {
+    drawText(0, 20, "", "VODKA", 6, m_secondaryColor, X_CENTER);
+    drawText(0, 0, "", "CONNECTING", 5, m_primaryColor, X_CENTER | Y_CENTER);
+    drawText(0, -20, "", "PEOPLE", 5, m_primaryColor, X_CENTER);
+  } else if (state == State::Pouring) {
+    clear();
+  }
+}
+
+void Display::clear() {
+  std::memset(m_capacityData.data(), 0, sizeof(m_capacityData));
+  std::memset(m_batteryData.data(), 0, sizeof(m_batteryData));
+  std::memset(m_modeData.data(), 0, sizeof(m_modeData));
+  std::memset(m_counterData.data(), 0, sizeof(m_counterData));
+
+  m_backgroundColor = stringToColor(m_settings.m_backgroundColor);
+  m_primaryColor = stringToColor(m_settings.m_primaryColor);
+  m_secondaryColor = stringToColor(m_settings.m_secondaryColor);
+
+  m_display.fillScreen(m_backgroundColor);
+}
+
+void Display::setPouringData(const int counter, const float progress) {
+  ShortStaticString counterData;
+  sprintf(counterData.data(), "%d", counter);
+  drawText(0, 0, m_counterData.data(), counterData.data(), 12, m_primaryColor, X_CENTER | Y_CENTER);
+  m_counterData = counterData;
+
+  const auto progressHeight = static_cast<int>(LCD_HEIGHT * progress);
+  if (progressHeight) {
+    const auto color = hsvToColor(progress * 90, 1.0f, 1.0f);
+    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, LCD_HEIGHT - progressHeight, WIDTH_STATUS, progressHeight, color);
+  } else {
+    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, m_backgroundColor);
+  }
+}
+
+Display::TextBounds Display::getTextBounds(const int x, const int y, const char* text, const uint8_t size, const uint8_t alignment) {
   TextBounds textBounds;
-  display.setTextSize(size);
-  display.getTextBounds(text, x, y, &textBounds.x, &textBounds.y, &textBounds.width, &textBounds.height);
+  m_display.setTextSize(size);
+  m_display.getTextBounds(text, x, y, &textBounds.x, &textBounds.y, &textBounds.width, &textBounds.height);
   if (alignment & X_CENTER) {
     textBounds.x = (LCD_WIDTH - textBounds.width) / 2;
   } else if (0 < x) {
@@ -40,25 +109,25 @@ TextBounds getTextBounds(Adafruit_ST7789& display, const int x, const int y, con
   return textBounds;
 }
 
-void drawText(Adafruit_ST7789& display, const int x, const int y, const char* oldText, const char* newText, const uint8_t size, const uint16_t color, const uint8_t alignment) {
+void Display::drawText(const int x, const int y, const char* oldText, const char* newText, const uint8_t size, const uint16_t color, const uint8_t alignment) {
   if (strcmp(oldText, newText) == 0) {
     return;
   }
 
-  display.setTextSize(size);
-  display.setTextColor(color);
+  m_display.setTextSize(size);
+  m_display.setTextColor(color);
 
   if (0 < strlen(oldText)) {
-    const auto textBounds = getTextBounds(display, x, y, oldText, size, alignment);
-    display.fillRect(textBounds.x, textBounds.y, textBounds.width, textBounds.height, BACKGROUND);
+    const auto textBounds = getTextBounds(x, y, oldText, size, alignment);
+    m_display.fillRect(textBounds.x, textBounds.y, textBounds.width, textBounds.height, m_backgroundColor);
   }
 
-  const auto textBounds = getTextBounds(display, x, y, newText, size, alignment);
-  display.setCursor(textBounds.x, textBounds.y);
-  display.print(newText);
+  const auto textBounds = getTextBounds(x, y, newText, size, alignment);
+  m_display.setCursor(textBounds.x, textBounds.y);
+  m_display.print(newText);
 }
 
-uint16_t hsvToColor(Adafruit_ST7789& display, const float h, const float s, const float v) {
+uint16_t Display::hsvToColor(const float h, const float s, const float v) {
   const float c = v * s;
   const float x = c * (1 - fabs(fmod(h / 60.0, 2) - 1));
   const float m = v - c;
@@ -87,70 +156,12 @@ uint16_t hsvToColor(Adafruit_ST7789& display, const float h, const float s, cons
     b = x;
   }
 
-  return display.color565(static_cast<int>((r + m) * 255), static_cast<int>((g + m) * 255), static_cast<int>((b + m) * 255));
+  return m_display.color565(static_cast<int>((r + m) * 255), static_cast<int>((g + m) * 255), static_cast<int>((b + m) * 255));
 }
 
-Display::Display(const Settings& settings, const BatteryController& batteryController) : m_display(LCD_CS, LCD_DC, LCD_RST), m_settings(settings), m_batteryController(batteryController) {
-  SPI.begin(LCD_SCLK, -1, LCD_MOSI, -1);
-  SPI.setFrequency(40000000);
-  m_display.init(LCD_HEIGHT, LCD_WIDTH);
-  m_display.setRotation(1);
-  m_display.fillScreen(BACKGROUND);
-  m_display.setTextWrap(false);
-}
-
-Display::~Display() {}
-
-void Display::loop(const std::chrono::milliseconds& now) {
-  if (m_state == State::Pouring) {
-    ShortStaticString capacityData;
-    ShortStaticString batteryData;
-    ShortStaticString modeData;
-
-    sprintf(capacityData.data(), "%d ml", m_settings.m_capacity);
-    sprintf(batteryData.data(), "%d %%", m_batteryController.getPercentage());
-    sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MANUAL");
-
-    drawText(m_display, MARGIN, MARGIN, m_capacityData.data(), capacityData.data(), 3, ST77XX_BLUE, 0);
-    drawText(m_display, -MARGIN - WIDTH_STATUS, MARGIN, m_batteryData.data(), batteryData.data(), 3, ST77XX_BLUE, 0);
-    drawText(m_display, MARGIN, -MARGIN, m_modeData.data(), modeData.data(), 3, ST77XX_BLUE, 0);
-
-    m_capacityData = capacityData;
-    m_batteryData = batteryData;
-    m_modeData = modeData;
-  }
-}
-
-void Display::setState(const State state) {
-  if (m_state == state) {
-    return;
-  }
-
-  m_state = state;
-  m_display.fillScreen(BACKGROUND);
-  if (state == State::Splash) {
-    drawText(m_display, 0, 20, "", "VODKA", 6, ST77XX_BLUE, X_CENTER);
-    drawText(m_display, 0, 0, "", "CONNECTING", 5, ST77XX_RED, X_CENTER | Y_CENTER);
-    drawText(m_display, 0, -20, "", "PEOPLE", 5, ST77XX_RED, X_CENTER);
-  } else if (state == State::Pouring) {
-    std::memset(m_capacityData.data(), 0, sizeof(m_capacityData));
-    std::memset(m_batteryData.data(), 0, sizeof(m_batteryData));
-    std::memset(m_modeData.data(), 0, sizeof(m_modeData));
-    std::memset(m_counterData.data(), 0, sizeof(m_counterData));
-  }
-}
-
-void Display::setPouringData(const int counter, const float progress) {
-  ShortStaticString counterData;
-  sprintf(counterData.data(), "%d", counter);
-  drawText(m_display, 0, 0, m_counterData.data(), counterData.data(), 12, ST77XX_RED, X_CENTER | Y_CENTER);
-  m_counterData = counterData;
-
-  const auto progressHeight = static_cast<int>(LCD_HEIGHT * progress);
-  if (progressHeight) {
-    const auto color = hsvToColor(m_display, progress * 90, 1.0f, 1.0f);
-    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, LCD_HEIGHT - progressHeight, WIDTH_STATUS, progressHeight, color);
-  } else {
-    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, BACKGROUND);
-  }
+uint16_t Display::stringToColor(const std::string& color) {
+  const auto r = std::stoi(color.substr(1, 2), nullptr, 16);
+  const auto g = std::stoi(color.substr(3, 2), nullptr, 16);
+  const auto b = std::stoi(color.substr(5, 2), nullptr, 16);
+  return m_display.color565(r, g, b);
 }

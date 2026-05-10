@@ -44,6 +44,16 @@ uint16_t createSlider(
   return control;
 }
 
+uint16_t createColor(const uint16_t parent, const char* name, std::string& value, std::function<void()> changeValueCallback, std::vector<std::function<void()>>& readSettingsCallbacks) {
+  const auto control = ESPUI.addControl(ControlType::Text, name, toString<std::string>(value), VIEW_CONTROL_COLOR, parent, [&value, changeValueCallback](Control* control, int) {
+    value = fromString<std::string>(control->value);
+    changeValueCallback();
+  });
+  ESPUI.setInputType(control, "color");
+  readSettingsCallbacks.push_back([&value, control]() { ESPUI.updateControlValue(control, toString<std::string>(value)); });
+  return control;
+}
+
 UiData::UiData() : m_pourCount(0), m_distanceErrorCount(0) {}
 
 UiController::UiController(
@@ -78,6 +88,9 @@ UiController::UiController(
   createSlider(advancedTab, "detection distance [cm]", m_settings.m_distance, 1, 100, 1, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createSlider(advancedTab, "glass detection delay [ms]", m_settings.m_glassDetectionDelay, 500, 10000, 100, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createSlider(advancedTab, "glass disappear delay [ms]", m_settings.m_glassDisappearDelay, 10, 1000, 10, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
+  createColor(advancedTab, "background color", m_settings.m_backgroundColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
+  createColor(advancedTab, "primary color", m_settings.m_primaryColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
+  createColor(advancedTab, "secondary color", m_settings.m_secondaryColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   ESPUI.addControl(ControlType::Button, "default settings", "run", DANGER_BUTTON_CONTROL_COLOR, advancedTab, std::bind(&UiController::resetSettings, this, _1, _2));
 
   m_uptimeControl = ESPUI.addControl(ControlType::Label, "uptime", formatDuration(0ms).data(), VIEW_CONTROL_COLOR, debugTab);

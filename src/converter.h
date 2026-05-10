@@ -23,6 +23,11 @@ Mode fromString<Mode>(const String& value) {
   return static_cast<Mode>(fromString<int>(value));
 }
 
+template <>
+std::string fromString<std::string>(const String& value) {
+  return std::string(value.c_str());
+}
+
 template <typename T>
 String toString(const T& value);
 
@@ -39,4 +44,9 @@ String toString<std::chrono::milliseconds>(const std::chrono::milliseconds& valu
 template <>
 String toString<Mode>(const Mode& value) {
   return String(static_cast<int>(value));
+}
+
+template <>
+String toString<std::string>(const std::string& value) {
+  return String(value.c_str());
 }
