@@ -22,6 +22,7 @@ class GlassDetector : public Thread {
  private:
   Adafruit_VL53L0X m_distanceMeter;
 
+  std::chrono::milliseconds m_lastCheckTime;
   Status m_status;
   std::chrono::milliseconds m_lastDetectedTime;
   std::chrono::milliseconds m_lastNotDetectedTime;

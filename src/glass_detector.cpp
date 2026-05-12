@@ -7,6 +7,7 @@ constexpr auto LABEL = "glass";
 
 GlassDetector::GlassDetector(int& errorCount)
     : m_distanceMeter(),
+      m_lastCheckTime(0),
       m_status(GlassDetector::Status::NotDetected),
       m_lastDetectedTime(0),
       m_lastNotDetectedTime(0),
@@ -22,6 +23,11 @@ GlassDetector::GlassDetector(int& errorCount)
 GlassDetector::~GlassDetector() {}
 
 void GlassDetector::loop(const std::chrono::milliseconds& now) {
+  if (!(m_lastCheckTime + DISTANCE_CHECK_INTERVAL <= now)) {
+    return;
+  }
+  m_lastCheckTime = now;
+
   if (m_distanceMeter.isRangeComplete()) {
     m_distance = m_distanceMeter.readRange() / 10.0f;
     if (m_distance <= m_detectionDistance) {
