@@ -9,7 +9,7 @@
 
 constexpr auto LABEL = "battery";
 
-BatteryController::BatteryController() : m_lastVoltage(0.0f), m_lastPercentage(0) {
+BatteryController::BatteryController() : m_lastReadTime(0), m_lastVoltage(0.0f), m_lastPercentage(0) {
   if (FuelGauge.begin()) {
     log(LABEL, "success, version: %d", FuelGauge.version());
   } else {
@@ -20,8 +20,11 @@ BatteryController::BatteryController() : m_lastVoltage(0.0f), m_lastPercentage(0
 BatteryController::~BatteryController() = default;
 
 void BatteryController::loop(const std::chrono::milliseconds& now) {
-  m_lastVoltage = FuelGauge.voltage() / 1000.0f;
-  m_lastPercentage = FuelGauge.percent();
+  if (m_lastReadTime + BATTERY_READ_INTERVAL <= now) {
+    m_lastVoltage = FuelGauge.voltage() / 1000.0f;
+    m_lastPercentage = FuelGauge.percent();
+    m_lastReadTime = now;
+  }
 }
 
 void BatteryController::reset() {

@@ -19,6 +19,7 @@ class BatteryController : public Thread {
   int getPercentage() const;
 
  private:
+  std::chrono::milliseconds m_lastReadTime;
   float m_lastVoltage;
   int m_lastPercentage;
 };

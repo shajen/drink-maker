@@ -32,6 +32,7 @@ constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
 
 constexpr auto SPLASH_SCREEN_TIME = std::chrono::seconds(3);
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
+constexpr auto BATTERY_READ_INTERVAL = 1000ms;
 constexpr auto UI_DEBUG_PRINT_INTERVAL = 100ms;
 
 constexpr auto SHORT_STRING_SIZE = 20;
