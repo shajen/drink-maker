@@ -12,7 +12,7 @@ constexpr auto SSID = "Vodka";
 constexpr auto PASSWORD = "12345678";
 constexpr auto OTA_PASSWORD = "12345678";
 
-constexpr auto UART_BAUDRATE = 115200;
+constexpr auto UART_BAUDRATE = 921600;
 constexpr auto SDA_PIN = 8;
 constexpr auto SCL_PIN = 9;
 

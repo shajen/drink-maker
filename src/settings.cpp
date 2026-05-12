@@ -39,7 +39,7 @@ void Settings::load(const char* filename) {
     m_backgroundColor = json["background_color"].as<std::string>();
     m_primaryColor = json["primary_color"].as<std::string>();
     m_secondaryColor = json["secondary_color"].as<std::string>();
-    log(LABEL, "%s", toString(json).data());
+    log(LABEL, toString(json).data());
     file.close();
   } else {
     log(LABEL, "can not open file: %s", filename);
@@ -60,7 +60,7 @@ void Settings::save(const char* filename) {
     json["primary_color"] = m_primaryColor;
     json["secondary_color"] = m_secondaryColor;
     serializeJson(json, file);
-    log(LABEL, "%s", toString(json).data());
+    log(LABEL, toString(json).data());
     file.close();
   } else {
     log(LABEL, "can not open file: %s", filename);
