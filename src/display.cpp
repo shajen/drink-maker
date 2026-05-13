@@ -63,6 +63,7 @@ void Display::clear() {
   std::memset(m_batteryData.data(), 0, sizeof(m_batteryData));
   std::memset(m_modeData.data(), 0, sizeof(m_modeData));
   std::memset(m_counterData.data(), 0, sizeof(m_counterData));
+  m_progressHeightData = 0;
 
   m_backgroundColor = stringToColor(m_settings.m_backgroundColor);
   m_primaryColor = stringToColor(m_settings.m_primaryColor);
@@ -78,11 +79,14 @@ void Display::setPouringData(const int counter, const float progress) {
   m_counterData = counterData;
 
   const auto progressHeight = static_cast<int>(LCD_HEIGHT * progress);
-  if (progressHeight) {
-    const auto color = hsvToColor(progress * 90, 1.0f, 1.0f);
-    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, LCD_HEIGHT - progressHeight, WIDTH_STATUS, progressHeight, color);
-  } else {
-    m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, m_backgroundColor);
+  if (progressHeight != m_progressHeightData) {
+    if (progressHeight) {
+      const auto color = hsvToColor(progress * 90, 1.0f, 1.0f);
+      m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, LCD_HEIGHT - progressHeight, WIDTH_STATUS, progressHeight, color);
+    } else {
+      m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, m_backgroundColor);
+    }
+    m_progressHeightData = progressHeight;
   }
 }
 

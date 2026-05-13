@@ -43,4 +43,5 @@ class Display : public Thread {
   ShortStaticString m_batteryData;
   ShortStaticString m_modeData;
   ShortStaticString m_counterData;
+  int m_progressHeightData;
 };
