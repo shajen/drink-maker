@@ -4,6 +4,7 @@
 #include <battery_controller.h>
 #include <helpers.h>
 #include <settings.h>
+#include <status_controller.h>
 #include <thread.h>
 
 #include <chrono>
@@ -13,7 +14,7 @@ class Display : public Thread {
  public:
   enum class State { Splash, Pouring };
 
-  Display(const Settings& settings, const BatteryController& batteryController);
+  Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController);
   ~Display();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -37,8 +38,10 @@ class Display : public Thread {
   State m_state;
   const Settings& m_settings;
   const BatteryController& m_batteryController;
+  const StatusController& m_statusController;
   uint16_t m_primaryColor;
   uint16_t m_secondaryColor;
+  ShortStaticString m_debugData;
   ShortStaticString m_capacityData;
   ShortStaticString m_batteryData;
   ShortStaticString m_modeData;

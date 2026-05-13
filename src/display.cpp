@@ -13,7 +13,8 @@ constexpr auto STATUS_HEIGHT = 112;
 constexpr auto X_CENTER = 2;
 constexpr auto Y_CENTER = 4;
 
-Display::Display(const Settings& settings, const BatteryController& batteryController) : m_display(LCD_CS, LCD_DC, LCD_RST), m_settings(settings), m_batteryController(batteryController) {
+Display::Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController)
+    : m_display(LCD_CS, LCD_DC, LCD_RST), m_settings(settings), m_batteryController(batteryController), m_statusController(statusController) {
   SPI.begin(LCD_SCLK, -1, LCD_MOSI, -1);
   SPI.setFrequency(40000000);
   m_display.init(LCD_HEIGHT, LCD_WIDTH);
@@ -28,6 +29,13 @@ Display::~Display() {}
 
 void Display::loop(const std::chrono::milliseconds& now) {
   if (m_state == State::Pouring) {
+    if (m_settings.m_isDebug) {
+      ShortStaticString debugData;
+      sprintf(debugData.data(), "%s %.2fV %.0f", formatDuration(now, false), m_batteryController.getVoltage(), m_statusController.getFps());
+      drawText(0, 0, m_debugData.data(), debugData.data(), 3, m_primaryColor, 0);
+      m_debugData = debugData;
+    }
+
     ShortStaticString capacityData;
     ShortStaticString batteryData;
     ShortStaticString modeData;
@@ -60,6 +68,7 @@ void Display::setState(const State state) {
 }
 
 void Display::clear() {
+  std::memset(m_debugData.data(), 0, sizeof(m_debugData));
   std::memset(m_capacityData.data(), 0, sizeof(m_capacityData));
   std::memset(m_batteryData.data(), 0, sizeof(m_batteryData));
   std::memset(m_modeData.data(), 0, sizeof(m_modeData));

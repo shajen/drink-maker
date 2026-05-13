@@ -28,6 +28,11 @@ std::string fromString<std::string>(const String& value) {
   return std::string(value.c_str());
 }
 
+template <>
+bool fromString<bool>(const String& value) {
+  return value == "1" ? true : false;
+}
+
 template <typename T>
 String toString(const T& value);
 
@@ -49,4 +54,9 @@ String toString<Mode>(const Mode& value) {
 template <>
 String toString<std::string>(const std::string& value) {
   return String(value.c_str());
+}
+
+template <>
+String toString<bool>(const bool& value) {
+  return value ? "1" : "0";
 }

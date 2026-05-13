@@ -54,6 +54,15 @@ uint16_t createColor(const uint16_t parent, const char* name, std::string& value
   return control;
 }
 
+uint16_t createSwitch(const uint16_t parent, const char* name, bool& value, std::function<void()> changeValueCallback, std::vector<std::function<void()>>& readSettingsCallbacks) {
+  const auto control = ESPUI.addControl(ControlType::Switcher, name, toString<bool>(value), VIEW_CONTROL_COLOR, parent, [&value, changeValueCallback](Control* control, int) {
+    value = fromString<bool>(control->value);
+    changeValueCallback();
+  });
+  readSettingsCallbacks.push_back([&value, control]() { ESPUI.updateControlValue(control, toString<bool>(value)); });
+  return control;
+}
+
 UiData::UiData() : m_pourCount(0), m_distanceErrorCount(0) {}
 
 UiController::UiController(
@@ -103,6 +112,7 @@ UiController::UiController(
   ESPUI.addControl(ControlType::Label, "build time", BUILD_TIME, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "version", GIT_TAG, VIEW_CONTROL_COLOR, debugTab);
   ESPUI.addControl(ControlType::Label, "commit", GIT_COMMIT, VIEW_CONTROL_COLOR, debugTab);
+  createSwitch(debugTab, "is debug", m_settings.m_isDebug, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   ESPUI.addControl(ControlType::Button, "battery reset", "run", DANGER_BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::batteryReset, this, _1, _2));
   ESPUI.addControl(ControlType::Button, "restart", "run", DANGER_BUTTON_CONTROL_COLOR, debugTab, std::bind(&UiController::reboot, this, _1, _2));
 

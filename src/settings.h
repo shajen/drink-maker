@@ -15,6 +15,7 @@ class Settings {
   std::chrono::milliseconds m_glassDisappearDelay;
   std::string m_primaryColor;
   std::string m_secondaryColor;
+  bool m_isDebug;
   void save();
   void reset();
 
