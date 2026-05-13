@@ -88,7 +88,6 @@ UiController::UiController(
   createSlider(advancedTab, "detection distance [cm]", m_settings.m_distance, 1, 100, 1, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createSlider(advancedTab, "glass detection delay [ms]", m_settings.m_glassDetectionDelay, 500, 10000, 100, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createSlider(advancedTab, "glass disappear delay [ms]", m_settings.m_glassDisappearDelay, 10, 1000, 10, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
-  createColor(advancedTab, "background color", m_settings.m_backgroundColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createColor(advancedTab, "primary color", m_settings.m_primaryColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   createColor(advancedTab, "secondary color", m_settings.m_secondaryColor, std::bind(&UiController::saveSettings, this), m_readSettingsCallbacks);
   ESPUI.addControl(ControlType::Button, "default settings", "run", DANGER_BUTTON_CONTROL_COLOR, advancedTab, std::bind(&UiController::resetSettings, this, _1, _2));

@@ -5,8 +5,10 @@
 
 #include <cstring>
 
-constexpr auto MARGIN = 2;
-constexpr auto WIDTH_STATUS = 32;
+constexpr auto STATUS_X = 11;
+constexpr auto STATUS_Y = 56;
+constexpr auto STATUS_WIDTH = 22;
+constexpr auto STATUS_HEIGHT = 112;
 
 constexpr auto X_CENTER = 2;
 constexpr auto Y_CENTER = 4;
@@ -17,6 +19,7 @@ Display::Display(const Settings& settings, const BatteryController& batteryContr
   m_display.init(LCD_HEIGHT, LCD_WIDTH);
   m_display.setRotation(1);
   m_display.setTextWrap(false);
+  m_display.fillScreen(ST77XX_BLACK);
 
   clear();
 }
@@ -29,13 +32,13 @@ void Display::loop(const std::chrono::milliseconds& now) {
     ShortStaticString batteryData;
     ShortStaticString modeData;
 
-    sprintf(capacityData.data(), "%d ml", m_settings.m_capacity);
-    sprintf(batteryData.data(), "%d %%", m_batteryController.getPercentage());
+    sprintf(capacityData.data(), "%dml", m_settings.m_capacity);
+    sprintf(batteryData.data(), "%d%%", m_batteryController.getPercentage());
     sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MANUAL");
 
-    drawText(MARGIN, MARGIN, m_capacityData.data(), capacityData.data(), 3, m_secondaryColor, 0);
-    drawText(-MARGIN - WIDTH_STATUS, MARGIN, m_batteryData.data(), batteryData.data(), 3, m_secondaryColor, 0);
-    drawText(MARGIN, -MARGIN, m_modeData.data(), modeData.data(), 3, m_secondaryColor, 0);
+    drawText(260, 193, m_capacityData.data(), capacityData.data(), 2, m_secondaryColor, 0);
+    drawText(260, 172, m_batteryData.data(), batteryData.data(), 2, m_secondaryColor, 0);
+    drawText(260, 217, m_modeData.data(), modeData.data(), 2, m_secondaryColor, 0);
 
     m_capacityData = capacityData;
     m_batteryData = batteryData;
@@ -49,7 +52,6 @@ void Display::setState(const State state) {
   }
 
   m_state = state;
-  m_display.fillScreen(m_backgroundColor);
   if (state == State::Splash) {
     drawImage("/splash.raw");
   } else if (state == State::Pouring) {
@@ -64,26 +66,25 @@ void Display::clear() {
   std::memset(m_counterData.data(), 0, sizeof(m_counterData));
   m_progressHeightData = 0;
 
-  m_backgroundColor = stringToColor(m_settings.m_backgroundColor);
   m_primaryColor = stringToColor(m_settings.m_primaryColor);
   m_secondaryColor = stringToColor(m_settings.m_secondaryColor);
 
-  m_display.fillScreen(m_backgroundColor);
+  drawImage("/background.raw");
 }
 
 void Display::setPouringData(const int counter, const float progress) {
   ShortStaticString counterData;
   sprintf(counterData.data(), "%d", counter);
-  drawText(0, 0, m_counterData.data(), counterData.data(), 12, m_primaryColor, X_CENTER | Y_CENTER);
+  drawText(20, 200, m_counterData.data(), counterData.data(), 4, m_primaryColor, 0);
   m_counterData = counterData;
 
-  const auto progressHeight = static_cast<int>(LCD_HEIGHT * progress);
+  const auto progressHeight = static_cast<int>(STATUS_HEIGHT * progress);
   if (progressHeight != m_progressHeightData) {
     if (progressHeight) {
       const auto color = hsvToColor(progress * 90, 1.0f, 1.0f);
-      m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, LCD_HEIGHT - progressHeight, WIDTH_STATUS, progressHeight, color);
+      m_display.fillRect(STATUS_X, LCD_HEIGHT - STATUS_Y - progressHeight, STATUS_WIDTH, progressHeight, color);
     } else {
-      m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, m_backgroundColor);
+      m_display.fillRect(STATUS_X, LCD_HEIGHT - STATUS_Y - STATUS_HEIGHT, STATUS_WIDTH, STATUS_HEIGHT, ST77XX_BLACK);
     }
     m_progressHeightData = progressHeight;
   }
@@ -131,7 +132,7 @@ void Display::drawText(const int x, const int y, const char* oldText, const char
 
   if (0 < strlen(oldText)) {
     const auto textBounds = getTextBounds(x, y, oldText, size, alignment);
-    m_display.fillRect(textBounds.x, textBounds.y, textBounds.width, textBounds.height, m_backgroundColor);
+    m_display.fillRect(textBounds.x, textBounds.y, textBounds.width, textBounds.height, ST77XX_BLACK);
   }
 
   const auto textBounds = getTextBounds(x, y, newText, size, alignment);

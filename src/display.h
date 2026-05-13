@@ -37,7 +37,6 @@ class Display : public Thread {
   State m_state;
   const Settings& m_settings;
   const BatteryController& m_batteryController;
-  uint16_t m_backgroundColor;
   uint16_t m_primaryColor;
   uint16_t m_secondaryColor;
   ShortStaticString m_capacityData;
