@@ -1,3 +1,4 @@
+#include <LittleFS.h>
 #include <config.h>
 #include <display.h>
 #include <logger.h>
@@ -50,9 +51,7 @@ void Display::setState(const State state) {
   m_state = state;
   m_display.fillScreen(m_backgroundColor);
   if (state == State::Splash) {
-    drawText(0, 20, "", "VODKA", 6, m_secondaryColor, X_CENTER);
-    drawText(0, 0, "", "CONNECTING", 5, m_primaryColor, X_CENTER | Y_CENTER);
-    drawText(0, -20, "", "PEOPLE", 5, m_primaryColor, X_CENTER);
+    drawImage("/splash.raw");
   } else if (state == State::Pouring) {
     clear();
   }
@@ -87,6 +86,15 @@ void Display::setPouringData(const int counter, const float progress) {
       m_display.fillRect(LCD_WIDTH - WIDTH_STATUS, 0, WIDTH_STATUS, LCD_HEIGHT, m_backgroundColor);
     }
     m_progressHeightData = progressHeight;
+  }
+}
+
+void Display::drawImage(const char* path) {
+  File f = LittleFS.open(path, "r");
+  uint16_t buffer[LCD_WIDTH];
+  for (int y = 0; y < LCD_HEIGHT; y++) {
+    f.read((uint8_t*)buffer, LCD_WIDTH * 2);
+    m_display.drawRGBBitmap(0, y, buffer, LCD_WIDTH, 1);
   }
 }
 
