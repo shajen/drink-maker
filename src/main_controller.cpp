@@ -3,8 +3,6 @@
 #include <ElegantOTA.h>
 #include <config.h>
 #include <main_controller.h>
-#include <pouring_controller.h>
-#include <splash_controller.h>
 
 MainController::MainController()
     : m_isSplash(true),
@@ -17,8 +15,7 @@ MainController::MainController()
           m_uiData,
           m_settings,
           std::bind(&MainController::updateSettingsCallback, this),
-          std::bind(&MainController::startManualPouringCallback, this)),
-      m_logicController(std::make_unique<SplashController>(m_display)) {
+          std::bind(&MainController::startManualPouringCallback, this)) {
   ArduinoOTA.setHostname(HOSTNAME);
   ArduinoOTA.setPassword(OTA_PASSWORD);
   ArduinoOTA.begin();
@@ -31,7 +28,7 @@ MainController::~MainController() {}
 void MainController::loop(const std::chrono::milliseconds& now) {
   std::unique_lock<std::mutex> lock(m_mutex);
   if (m_isSplash && SPLASH_SCREEN_TIME <= now) {
-    updateLogicController();
+    updatePouringController();
     m_isSplash = false;
   }
 
@@ -42,7 +39,9 @@ void MainController::loop(const std::chrono::milliseconds& now) {
   m_display.loop(now);
   m_glassDetector.loop(now);
   m_pumpController.loop(now);
-  m_logicController->loop(now);
+  if (m_pouringController) {
+    m_pouringController->loop(now);
+  }
   ArduinoOTA.handle();
   ElegantOTA.loop();
 }
@@ -52,18 +51,17 @@ void MainController::updateSettingsCallback() {
   m_display.clear();
   m_pumpController.setEnabled(false);
   if (!m_isSplash) {
-    updateLogicController();
+    updatePouringController();
   }
 }
 
 void MainController::startManualPouringCallback() {
   std::unique_lock<std::mutex> lock(m_mutex);
-  auto pouringController = reinterpret_cast<PouringController*>(m_logicController.get());
-  if (pouringController) {
-    pouringController->startManualPouring();
+  if (m_pouringController) {
+    m_pouringController->startManualPouring();
   }
 }
 
-void MainController::updateLogicController() {
-  m_logicController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_pumpController, m_uiData.m_pourCount);
+void MainController::updatePouringController() {
+  m_pouringController = std::make_unique<PouringController>(m_settings, m_batteryController, m_display, m_glassDetector, m_pumpController, m_uiData.m_pourCount);
 }

@@ -3,6 +3,7 @@
 #include <battery_controller.h>
 #include <display.h>
 #include <glass_detector.h>
+#include <pouring_controller.h>
 #include <pump_controller.h>
 #include <settings.h>
 #include <status_controller.h>
@@ -23,7 +24,7 @@ class MainController : public Thread {
  private:
   void updateSettingsCallback();
   void startManualPouringCallback();
-  void updateLogicController();
+  void updatePouringController();
 
   bool m_isSplash;
   UiData m_uiData;
@@ -36,6 +37,6 @@ class MainController : public Thread {
   WifiController m_wifiController;
   UiController m_uiController;
 
-  std::unique_ptr<Thread> m_logicController;
+  std::unique_ptr<PouringController> m_pouringController;
   std::mutex m_mutex;
 };

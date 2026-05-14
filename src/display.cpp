@@ -14,15 +14,16 @@ constexpr auto X_CENTER = 2;
 constexpr auto Y_CENTER = 4;
 
 Display::Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController)
-    : m_display(LCD_CS, LCD_DC, LCD_RST), m_settings(settings), m_batteryController(batteryController), m_statusController(statusController) {
+    : m_display(LCD_CS, LCD_DC, LCD_RST), m_state(State::Splash), m_settings(settings), m_batteryController(batteryController), m_statusController(statusController) {
   SPI.begin(LCD_SCLK, -1, LCD_MOSI, -1);
   SPI.setFrequency(40000000);
   m_display.init(LCD_HEIGHT, LCD_WIDTH);
+  m_display.enableDisplay(false);
   m_display.setRotation(1);
   m_display.setTextWrap(false);
-  m_display.fillScreen(ST77XX_BLACK);
 
   clear();
+  m_display.enableDisplay(true);
 }
 
 Display::~Display() {}
@@ -60,11 +61,7 @@ void Display::setState(const State state) {
   }
 
   m_state = state;
-  if (state == State::Splash) {
-    drawImage("/splash.raw");
-  } else if (state == State::Pouring) {
-    clear();
-  }
+  clear();
 }
 
 void Display::clear() {
@@ -78,7 +75,11 @@ void Display::clear() {
   m_primaryColor = stringToColor(m_settings.m_primaryColor);
   m_secondaryColor = stringToColor(m_settings.m_secondaryColor);
 
-  drawImage("/background.raw");
+  if (m_state == State::Splash) {
+    drawImage("/splash.raw");
+  } else if (m_state == State::Pouring) {
+    drawImage("/background.raw");
+  }
 }
 
 void Display::setPouringData(const int counter, const float progress) {
