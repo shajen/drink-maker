@@ -9,44 +9,34 @@ WALL = 2.0;
 LID_STEP = 1.0;
 LID_MARGIN = 0.4;
 
-WIDTH = 60;
-DEPTH = 124;
+WIDTH = 90 + 4 * WALL;
+DEPTH = 120 + 4 * WALL;
 HEIGHT = 52;
-
-WS_IN_DIA = 0;
-WS_OUT_DIA = 52;
-WS_WIDTH = 3.5;
-WS_DEPTH_OFFSET = WS_OUT_DIA / 2 + WALL;
 
 PIPE_IN_DIA = 6.6;
 PIPE_OUT_DIA = 9.8;
 PIPE_MOUNT_DIA = 10.0;
 PIPE_CONNECTOR_LENGTH = 10;
-PIPE_DEPTH_OFFSET = WS_DEPTH_OFFSET + PIPE_MOUNT_DIA / 2 + WS_OUT_DIA / 2 + 2 * WALL;
+PIPE_DEPTH_OFFSET = 73;
 PIPE_BEND_R = 20;
 PIPE_A = 110;
 PIPE_B = 86;
 PIPE_C = 50;
 
 DS_DEPTH = 15;
-DS_DEPTH_OFFSET = PIPE_DEPTH_OFFSET + DS_DEPTH + 5;
+DS_DEPTH_OFFSET = PIPE_DEPTH_OFFSET + DS_DEPTH + 5 + PIPE_MOUNT_DIA;
 DS_HEIGHT = 8;
 DS_HEIGHT_OFFSET = 26;
 
-LCD_DEPTH = 25.5;
-LCD_DEPTH_OFFSET = DS_DEPTH_OFFSET + DS_DEPTH / 2 + LCD_DEPTH / 2 + 5;
-LCD_HEIGHT = 14;
-LCD_HEIGHT_OFFSET = 26;
+LCD_DEPTH = 44;
+LCD_DEPTH_OFFSET = 22 + 14;
+LCD_HEIGHT = 34;
+LCD_HEIGHT_OFFSET = 10;
 
-ESP_WIDTH = 22;
-ESP_WIDTH_OFFSET = 3;
-ESP_DEPTH = 87;
-ESP_DEPTH_OFFSET = 3;
-ESP_CABLE_DEPTH = 14;
-ESP_CABLE_HEIGHT = 8;
-ESP_CABLE_DEPTH_OFFSET = 22;
-ESP_CABLE_HEIGHT_OFFSET = 0;
-ESP_HEIGHT_MOUNTPOINT = 24;
+ESP_CABLE_DEPTH = 12.5;
+ESP_CABLE_HEIGHT = 4.5;
+ESP_CABLE_DEPTH_OFFSET = 82;
+ESP_CABLE_HEIGHT_OFFSET = 36;
 
 BASE_HEIGHT = 12;
 BASE_WALL = 2;
@@ -55,39 +45,80 @@ BASE_MARGIN = 0.4;
 TRACK_DISTANCE = 40;
 TRACK_MARGIN = 2;
 
-SWITCH_WIDTH = 19;
-SWITCH_DEPTH = 12.8;
-SWITCH_WIDTH_OFFSET = 12;
-SWITCH_DEPTH_OFFSET = DEPTH + 2 * (LID_STEP - LID_MARGIN) - SWITCH_DEPTH - 30;
+SWITCH_R = 6.2;
+SWITCH_DEPTH_OFFSET = 110;
+SWITCH_HEIGHT_OFFSET = 36;
+
+MOUNTPOINT_SIZE = 6;
+MOUNTPOINT_R = 1.4;
+MOUNTPOINT_HEIGHT = 12;
+SUPPORT_HEIGHT = 12;
 
 module window(depth, height, depth_offset, height_offset) {
   translate([WALL + WIDTH - MARGIN, WALL + depth_offset - depth / 2, WALL + height_offset])
     cube([WALL + 2 * MARGIN, depth, height]);
 }
 
+module window2(depth, height, depth_offset, height_offset) {
+  translate([-MARGIN, WALL + depth_offset - depth / 2, WALL + height_offset])
+    cube([WALL + 2 * MARGIN, depth, height]);
+}
+
+module circle2(radius, depth_offset, height_offset) {
+  translate([-MARGIN, depth_offset, height_offset + radius])
+    rotate([0, 90, 0])
+      cylinder(h=WALL + 2 * MARGIN, r=radius);
+}
+
+module single_support() {
+  x = MOUNTPOINT_SIZE;
+  h = SUPPORT_HEIGHT;
+  translate([-MOUNTPOINT_SIZE / 2, -MOUNTPOINT_SIZE / 2, 0])
+    polyhedron(
+      points=[
+        [0, 0, 0],
+        [x, 0, 0],
+        [0, 0, h],
+        [x, 0, h],
+        [x, x, h],
+        [0, x, h],
+      ],
+      faces=[
+        [0, 1, 3, 2],
+        [1, 4, 3],
+        [0, 5, 4, 1],
+        [0, 2, 5],
+        [2, 3, 4, 5],
+      ],
+      convexity=10
+    );
+}
+
+module support(degree) {
+  translate([MOUNTPOINT_SIZE / 2, MOUNTPOINT_SIZE / 2, 0]) rotate([0, 0, degree]) single_support();
+  translate([MOUNTPOINT_SIZE / 2, MOUNTPOINT_SIZE / 2, 0]) rotate([0, 0, degree + 90]) single_support();
+}
+
+module mountpoint(x, y, degree) {
+  translate([x + WALL, y + WALL, HEIGHT + WALL - SUPPORT_HEIGHT - MOUNTPOINT_HEIGHT]) {
+    support(degree);
+    translate([0, 0, SUPPORT_HEIGHT]) {
+      difference() {
+        cube([MOUNTPOINT_SIZE, MOUNTPOINT_SIZE, MOUNTPOINT_HEIGHT]);
+        translate([MOUNTPOINT_SIZE / 2, MOUNTPOINT_SIZE / 2, 0])
+          cylinder(h=MOUNTPOINT_HEIGHT + MARGIN, r=MOUNTPOINT_R);
+      }
+    }
+  }
+}
+
 module shape(height, margin) {
   difference() {
     cube([WIDTH + 2 * margin, DEPTH + 2 * margin, height]);
-    // translate(
-    //     [ WIDTH - WALL - WS_WIDTH + 2 * margin, WS_DEPTH_OFFSET - WS_OUT_DIA / 2 - WALL + 2 * margin, -MARGIN ])
-    //     roundedcube(
-    //         [ WS_WIDTH + 2 * WALL + MARGIN + margin, WS_OUT_DIA + 2 * WALL - 2 * margin, height + 2 * MARGIN ],
-    //         false, ROUND, "z");
-    // translate([
-    //     WIDTH - WALL - PIPE_MOUNT_DIA + 2 * margin, PIPE_DEPTH_OFFSET - PIPE_MOUNT_DIA / 2 - WALL + 2
-    //     * margin, -MARGIN
-    // ])
-    //     roundedcube(
-    //         [
-    //             PIPE_MOUNT_DIA + 2 * WALL + MARGIN + margin, PIPE_MOUNT_DIA + 2 * WALL - 2 * margin,
-    //             height + 2 *
-    //             MARGIN
-    //         ],
-    //         false, ROUND, "z");
-    translate([WIDTH - WALL - PIPE_MOUNT_DIA + 2 * margin, 0, -MARGIN]) cube(
+    translate([WIDTH - WALL - PIPE_MOUNT_DIA + 2 * margin, PIPE_DEPTH_OFFSET + 2 * margin, -MARGIN]) cube(
         [
           PIPE_MOUNT_DIA + 2 * WALL + MARGIN + margin,
-          WS_OUT_DIA + PIPE_MOUNT_DIA + 4 * WALL,
+          PIPE_MOUNT_DIA + 4 * WALL - 2 * margin,
           height + 2 * MARGIN,
         ]
       );
@@ -103,37 +134,28 @@ module main() {
     window(LCD_DEPTH, LCD_HEIGHT, LCD_DEPTH_OFFSET, LCD_HEIGHT_OFFSET);
     window(DS_DEPTH, DS_HEIGHT, DS_DEPTH_OFFSET, DS_HEIGHT_OFFSET);
 
+    window2(
+      ESP_CABLE_DEPTH, ESP_CABLE_HEIGHT, ESP_CABLE_DEPTH_OFFSET,
+      ESP_CABLE_HEIGHT_OFFSET
+    );
+    circle2(SWITCH_R, SWITCH_DEPTH_OFFSET, SWITCH_HEIGHT_OFFSET);
+
     translate(
-      [WALL + WIDTH - PIPE_MOUNT_DIA / 2, PIPE_DEPTH_OFFSET + WALL, WALL + HEIGHT - PIPE_CONNECTOR_LENGTH]
+      [WALL + WIDTH - PIPE_MOUNT_DIA / 2, PIPE_DEPTH_OFFSET + PIPE_MOUNT_DIA / 2 + 3 * WALL, WALL + HEIGHT - PIPE_CONNECTOR_LENGTH]
     )
       pipe(0, PIPE_MOUNT_DIA, PIPE_CONNECTOR_LENGTH + WALL + MARGIN);
 
-    translate([WIDTH - PIPE_MOUNT_DIA - MARGIN, PIPE_DEPTH_OFFSET - PIPE_MOUNT_DIA / 2 + WALL, WALL + MARGIN])
+    translate([WIDTH - PIPE_MOUNT_DIA - MARGIN, PIPE_DEPTH_OFFSET + 3 * WALL, WALL + MARGIN])
       cube([PIPE_MOUNT_DIA + WALL, PIPE_MOUNT_DIA, HEIGHT - PIPE_CONNECTOR_LENGTH - WALL]);
-
-    translate(
-      [
-        -MARGIN,
-        WALL + ESP_DEPTH_OFFSET + ESP_CABLE_DEPTH_OFFSET,
-        WALL + ESP_HEIGHT_MOUNTPOINT + ESP_CABLE_HEIGHT_OFFSET,
-      ]
-    ) cube([WALL + 2 * MARGIN, ESP_CABLE_DEPTH, ESP_CABLE_HEIGHT]);
-
-    translate([2 * WALL + WIDTH - MARGIN - WS_WIDTH, WALL + WS_DEPTH_OFFSET, WALL + WS_OUT_DIA / 2])
-      rotate([0, 90, 0]) pipe(WS_IN_DIA, WS_OUT_DIA, WS_WIDTH + 2 * MARGIN);
   }
-  ;
-
-  translate([WALL + ESP_WIDTH_OFFSET, WALL + ESP_DEPTH_OFFSET, WALL])
-    pcb_mount(ESP_WIDTH, ESP_DEPTH, 2, 6, ESP_HEIGHT_MOUNTPOINT);
+  mountpoint(0, 0, 270);
+  mountpoint(0, DEPTH - 3 * WALL, 180);
+  mountpoint(WIDTH - 3 * WALL, DEPTH - 3 * WALL, 90);
+  mountpoint(WIDTH - 3 * WALL, 0, 0);
 }
 
 module lid() {
-  difference() {
-    shape(WALL, LID_STEP - LID_MARGIN);
-    translate([SWITCH_WIDTH_OFFSET, SWITCH_DEPTH_OFFSET, -MARGIN])
-      cube([SWITCH_WIDTH, SWITCH_DEPTH, WALL + 2 * MARGIN]);
-  }
+  shape(WALL, LID_STEP - LID_MARGIN);
 }
 
 module base() {
