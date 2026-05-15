@@ -41,8 +41,9 @@ void Display::loop(const std::chrono::milliseconds& now) {
     ShortStaticString batteryData;
     ShortStaticString modeData;
 
+    const auto batteryPercentage = m_settings.m_isDebug ? m_batteryController.getPercentage() : std::min(m_batteryController.getPercentage(), 100);
     sprintf(capacityData.data(), "%dml", m_settings.m_capacity);
-    sprintf(batteryData.data(), "%d%%", m_batteryController.getPercentage());
+    sprintf(batteryData.data(), "%d%%", batteryPercentage);
     sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MANUAL");
 
     drawText(260, 193, m_capacityData.data(), capacityData.data(), 2, m_secondaryColor, 0);
