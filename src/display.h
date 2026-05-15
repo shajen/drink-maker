@@ -2,6 +2,7 @@
 
 #include <Adafruit_ST7789.h>
 #include <battery_controller.h>
+#include <glass_detector.h>
 #include <helpers.h>
 #include <settings.h>
 #include <status_controller.h>
@@ -14,7 +15,7 @@ class Display : public Thread {
  public:
   enum class State { Splash, Pouring };
 
-  Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController);
+  Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController, const GlassDetector& glassDetector);
   ~Display();
 
   void loop(const std::chrono::milliseconds& now) override;
@@ -39,9 +40,11 @@ class Display : public Thread {
   const Settings& m_settings;
   const BatteryController& m_batteryController;
   const StatusController& m_statusController;
+  const GlassDetector& m_glassDetector;
   uint16_t m_primaryColor;
   uint16_t m_secondaryColor;
-  ShortStaticString m_debugData;
+  std::chrono::milliseconds m_lastPrintDebugTime;
+  LongStaticString m_debugData;
   ShortStaticString m_capacityData;
   ShortStaticString m_batteryData;
   ShortStaticString m_modeData;

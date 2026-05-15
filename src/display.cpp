@@ -1,6 +1,7 @@
 #include <LittleFS.h>
 #include <config.h>
 #include <display.h>
+#include <helpers.h>
 #include <logger.h>
 
 #include <cstring>
@@ -13,8 +14,14 @@ constexpr auto STATUS_HEIGHT = 112;
 constexpr auto X_CENTER = 2;
 constexpr auto Y_CENTER = 4;
 
-Display::Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController)
-    : m_display(LCD_CS, LCD_DC, LCD_RST), m_state(State::Splash), m_settings(settings), m_batteryController(batteryController), m_statusController(statusController) {
+Display::Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController, const GlassDetector& glassDetector)
+    : m_display(LCD_CS, LCD_DC, LCD_RST),
+      m_state(State::Splash),
+      m_settings(settings),
+      m_batteryController(batteryController),
+      m_statusController(statusController),
+      m_glassDetector(glassDetector),
+      m_lastPrintDebugTime(0) {
   SPI.begin(LCD_SCLK, -1, LCD_MOSI, -1);
   SPI.setFrequency(40000000);
   m_display.init(LCD_HEIGHT, LCD_WIDTH);
@@ -33,10 +40,16 @@ void Display::loop(const std::chrono::milliseconds& now) {
     clear();
   }
   if (m_state == State::Pouring) {
-    if (m_settings.m_isDebug) {
-      ShortStaticString debugData;
-      sprintf(debugData.data(), "%s %.2fV %.0f", formatDuration(now, false), m_batteryController.getVoltage(), m_statusController.getFps());
+    if (m_settings.m_isDebug && m_lastPrintDebugTime + UI_DEBUG_PRINT_INTERVAL <= now) {
+      m_lastPrintDebugTime = now;
+      size_t size = 0;
+      LongStaticString debugData;
+
+      size += sprintf(&debugData[size], "%s %3dc %3de\n", formatDuration(now, false), m_glassDetector.getDistance(), m_glassDetector.getErrorCount());
+      size += sprintf(&debugData[size], "%3dk %.2fV %.0ff %c%c\n", ESP.getFreeHeap() / 1024, m_batteryController.getVoltage(), m_statusController.getFps(), getWifiMode(), getWifiStatus());
+
       drawText(0, 0, m_debugData.data(), debugData.data(), 3, m_primaryColor, 0);
+
       m_debugData = debugData;
     }
 

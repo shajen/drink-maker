@@ -1,6 +1,7 @@
 #include "helpers.h"
 
 #include <Arduino.h>
+#include <WiFi.h>
 #include <config.h>
 
 #include <cstring>
@@ -46,3 +47,18 @@ ShortStaticString formatDuration(const std::chrono::milliseconds& now, const boo
   }
   return buffer;
 }
+
+char getWifiMode() {
+  switch (WiFi.getMode()) {
+    case wifi_mode_t::WIFI_MODE_STA:
+      return 'C';
+    case wifi_mode_t::WIFI_MODE_AP:
+      return 'H';
+    case wifi_mode_t::WIFI_MODE_APSTA:
+      return 'M';
+    default:
+      return ' ';
+  }
+}
+
+char getWifiStatus() { return WiFi.isConnected() ? '+' : '-'; }

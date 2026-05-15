@@ -13,3 +13,7 @@ using LongStaticString = std::array<char, LONG_STRING_SIZE>;
 int voltageToPercentage(const float voltage);
 
 ShortStaticString formatDuration(const std::chrono::milliseconds& now, const bool showMs = true);
+
+char getWifiMode();
+
+char getWifiStatus();

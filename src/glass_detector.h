@@ -18,6 +18,7 @@ class GlassDetector : public Thread {
   void setDetectionDistance(int distance);
   void setGlassDetectionDelay(std::chrono::milliseconds delay);
   void setGlassDisappearDelay(std::chrono::milliseconds delay);
+  int getErrorCount() const;
 
  private:
   Adafruit_VL53L0X m_distanceMeter;

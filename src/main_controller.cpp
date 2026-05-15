@@ -6,8 +6,8 @@
 
 MainController::MainController()
     : m_isSplash(true),
-      m_display(m_settings, m_batteryController, m_statusController),
       m_glassDetector(m_uiData.m_distanceErrorCount),
+      m_display(m_settings, m_batteryController, m_statusController, m_glassDetector),
       m_uiController(
           m_batteryController,
           m_statusController,

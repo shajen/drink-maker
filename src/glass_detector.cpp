@@ -69,3 +69,5 @@ void GlassDetector::setDetectionDistance(int distance) { m_detectionDistance = d
 void GlassDetector::setGlassDetectionDelay(std::chrono::milliseconds delay) { m_glassDetectionDelay = delay; }
 
 void GlassDetector::setGlassDisappearDelay(std::chrono::milliseconds delay) { m_glassDisappearDelay = delay; }
+
+int GlassDetector::getErrorCount() const { return m_errorCount; }

@@ -31,8 +31,8 @@ class MainController : public Thread {
   Settings m_settings;
   StatusController m_statusController;
   BatteryController m_batteryController;
-  Display m_display;
   GlassDetector m_glassDetector;
+  Display m_display;
   PumpController m_pumpController;
   WifiController m_wifiController;
   UiController m_uiController;
