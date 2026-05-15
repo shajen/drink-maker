@@ -48,7 +48,6 @@ void MainController::loop(const std::chrono::milliseconds& now) {
 
 void MainController::updateSettingsCallback() {
   std::unique_lock<std::mutex> lock(m_mutex);
-  m_display.clear();
   m_pumpController.setEnabled(false);
   if (!m_isSplash) {
     updatePouringController();

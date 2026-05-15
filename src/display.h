@@ -19,7 +19,6 @@ class Display : public Thread {
 
   void loop(const std::chrono::milliseconds& now) override;
   void setState(const State state);
-  void clear();
   void setPouringData(const int counter, const float progress);
 
  private:
@@ -28,6 +27,7 @@ class Display : public Thread {
     uint16_t width, height;
   };
 
+  void clear();
   void drawImage(const char* path);
   TextBounds getTextBounds(const int x, const int y, const char* text, const uint8_t size, const uint8_t alignment);
   void drawText(const int x, const int y, const char* oldText, const char* newText, const uint8_t size, const uint16_t color, const uint8_t alignment);

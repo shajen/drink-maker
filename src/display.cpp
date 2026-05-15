@@ -29,6 +29,9 @@ Display::Display(const Settings& settings, const BatteryController& batteryContr
 Display::~Display() {}
 
 void Display::loop(const std::chrono::milliseconds& now) {
+  if (0 < strlen(m_debugData.data()) && !m_settings.m_isDebug) {
+    clear();
+  }
   if (m_state == State::Pouring) {
     if (m_settings.m_isDebug) {
       ShortStaticString debugData;
@@ -44,7 +47,7 @@ void Display::loop(const std::chrono::milliseconds& now) {
     const auto batteryPercentage = m_settings.m_isDebug ? m_batteryController.getPercentage() : std::min(m_batteryController.getPercentage(), 100);
     sprintf(capacityData.data(), "%dml", m_settings.m_capacity);
     sprintf(batteryData.data(), "%d%%", batteryPercentage);
-    sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MANUAL");
+    sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MAN ");
 
     drawText(260, 193, m_capacityData.data(), capacityData.data(), 2, m_secondaryColor, 0);
     drawText(260, 172, m_batteryData.data(), batteryData.data(), 2, m_secondaryColor, 0);
@@ -138,15 +141,9 @@ void Display::drawText(const int x, const int y, const char* oldText, const char
     return;
   }
 
-  m_display.setTextSize(size);
-  m_display.setTextColor(color);
-
-  if (0 < strlen(oldText)) {
-    const auto textBounds = getTextBounds(x, y, oldText, size, alignment);
-    m_display.fillRect(textBounds.x, textBounds.y, textBounds.width, textBounds.height, ST77XX_BLACK);
-  }
-
   const auto textBounds = getTextBounds(x, y, newText, size, alignment);
+  m_display.setTextSize(size);
+  m_display.setTextColor(color, ST77XX_BLACK);
   m_display.setCursor(textBounds.x, textBounds.y);
   m_display.print(newText);
 }
