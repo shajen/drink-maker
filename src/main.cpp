@@ -1,11 +1,12 @@
 #include <Wire.h>
 #include <config.h>
 #include <logger.h>
+#include <low_battery_controller.h>
 #include <main_controller.h>
 
 #include <memory>
 
-std::unique_ptr<MainController> mainController;
+std::unique_ptr<Thread> thread;
 
 void setup() {
   Serial.begin(UART_BAUDRATE);
@@ -15,10 +16,15 @@ void setup() {
   Wire.begin(SDA_PIN, SCL_PIN);
   LittleFS.begin();
 
-  mainController = std::make_unique<MainController>();
+  BatteryController batteryController;
+  if (batteryController.isLowBattery()) {
+    thread = std::make_unique<LowBatteryController>();
+  } else {
+    thread = std::make_unique<MainController>();
+  }
 }
 
 void loop() {
   delay(1);
-  mainController->loop(std::chrono::milliseconds(millis()));
+  thread->loop(std::chrono::milliseconds(millis()));
 }

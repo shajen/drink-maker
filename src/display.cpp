@@ -16,7 +16,7 @@ constexpr auto Y_CENTER = 4;
 
 Display::Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController, const GlassDetector& glassDetector)
     : m_display(LCD_CS, LCD_DC, LCD_RST),
-      m_state(State::Splash),
+      m_state(batteryController.isLowBattery() ? State::LowBattery : State::Splash),
       m_settings(settings),
       m_batteryController(batteryController),
       m_statusController(statusController),
@@ -69,6 +69,17 @@ void Display::loop(const std::chrono::milliseconds& now) {
     m_capacityData = capacityData;
     m_batteryData = batteryData;
     m_modeData = modeData;
+  } else if (m_state == State::LowBattery) {
+    ShortStaticString batteryData;
+    if (m_settings.m_isDebug) {
+      sprintf(batteryData.data(), "%d%% %.2fV", m_batteryController.getPercentage(), m_batteryController.getVoltage());
+      drawText(0, 0, m_batteryData.data(), batteryData.data(), 3, ST77XX_WHITE, X_CENTER | Y_CENTER);
+    } else {
+      const auto batteryPercentage = m_settings.m_isDebug ? m_batteryController.getPercentage() : std::min(m_batteryController.getPercentage(), 100);
+      sprintf(batteryData.data(), "%d %%", batteryPercentage);
+      drawText(0, 0, m_batteryData.data(), batteryData.data(), 5, ST77XX_WHITE, X_CENTER | Y_CENTER);
+    }
+    m_batteryData = batteryData;
   }
 }
 
@@ -96,6 +107,15 @@ void Display::clear() {
     drawImage("/splash.raw");
   } else if (m_state == State::Pouring) {
     drawImage("/background.raw");
+  } else if (m_state == State::LowBattery) {
+    m_display.fillScreen(ST77XX_BLACK);
+    constexpr auto LOW_BATTERY_WIDTH = 260;
+    constexpr auto LOW_BATTERY_HEIGHT = 120;
+    constexpr auto X = (LCD_WIDTH - LOW_BATTERY_WIDTH) / 2;
+    constexpr auto Y = (LCD_HEIGHT - LOW_BATTERY_HEIGHT) / 2;
+    drawImage("/low_battery.raw", X, Y, LOW_BATTERY_WIDTH, LOW_BATTERY_HEIGHT);
+    drawText(0, 20, "", "LOW BATTERY", 3, ST77XX_RED, X_CENTER);
+    drawText(0, 200, "", "PLEASE CHARGE", 3, ST77XX_RED, X_CENTER);
   }
 }
 
@@ -117,12 +137,12 @@ void Display::setPouringData(const int counter, const float progress) {
   }
 }
 
-void Display::drawImage(const char* path) {
+void Display::drawImage(const char* path, const int x, const int y, const int width, const int height) {
   File f = LittleFS.open(path, "r");
-  uint16_t buffer[LCD_WIDTH];
-  for (int y = 0; y < LCD_HEIGHT; y++) {
-    f.read((uint8_t*)buffer, LCD_WIDTH * 2);
-    m_display.drawRGBBitmap(0, y, buffer, LCD_WIDTH, 1);
+  uint16_t buffer[width];
+  for (int row = y; row < y + height; row++) {
+    f.read((uint8_t*)buffer, width * 2);
+    m_display.drawRGBBitmap(x, row, buffer, width, 1);
   }
 }
 

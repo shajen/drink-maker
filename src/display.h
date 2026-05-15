@@ -13,7 +13,7 @@
 
 class Display : public Thread {
  public:
-  enum class State { Splash, Pouring };
+  enum class State { Splash, Pouring, LowBattery };
 
   Display(const Settings& settings, const BatteryController& batteryController, const StatusController& statusController, const GlassDetector& glassDetector);
   ~Display();
@@ -29,7 +29,7 @@ class Display : public Thread {
   };
 
   void clear();
-  void drawImage(const char* path);
+  void drawImage(const char* path, const int x = 0, const int y = 0, const int width = LCD_WIDTH, const int height = LCD_HEIGHT);
   TextBounds getTextBounds(const int x, const int y, const char* text, const uint8_t size, const uint8_t alignment);
   void drawText(const int x, const int y, const char* oldText, const char* newText, const uint8_t size, const uint16_t color, const uint8_t alignment);
   uint16_t hsvToColor(const float h, const float s, const float v);
