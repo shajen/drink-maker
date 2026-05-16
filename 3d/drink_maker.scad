@@ -1,4 +1,5 @@
 include <pipe.scad>
+include <generic.scad>
 include <roundedcube.scad>
 include <straigt_track.scad>
 
@@ -28,12 +29,12 @@ DS_DEPTH_OFFSET = PIPE_DEPTH_OFFSET + DS_DEPTH + 5 + PIPE_MOUNT_DIA;
 DS_HEIGHT = 8;
 DS_HEIGHT_OFFSET = 26;
 
-LCD_DEPTH = 44;
-LCD_DEPTH_OFFSET = 22 + 14;
-LCD_HEIGHT = 34;
+LCD_DEPTH = 52;
+LCD_DEPTH_OFFSET = 22 + 18;
+LCD_HEIGHT = 35.8;
 LCD_HEIGHT_OFFSET = 10;
 
-ESP_CABLE_DEPTH = 12.5;
+ESP_CABLE_DEPTH = 13.0;
 ESP_CABLE_HEIGHT = 4.5;
 ESP_CABLE_DEPTH_OFFSET = 82;
 ESP_CABLE_HEIGHT_OFFSET = 36;
@@ -45,14 +46,38 @@ BASE_MARGIN = 0.4;
 TRACK_DISTANCE = 40;
 TRACK_MARGIN = 2;
 
-SWITCH_R = 6.2;
+SWITCH_R = 6.4;
 SWITCH_DEPTH_OFFSET = 110;
 SWITCH_HEIGHT_OFFSET = 36;
 
 MOUNTPOINT_SIZE = 6;
-MOUNTPOINT_R = 1.4;
+MOUNTPOINT_R = 1.5;
 MOUNTPOINT_HEIGHT = 12;
 SUPPORT_HEIGHT = 12;
+
+PCB_MOUNTPOINT_USB_WIDTH_OFFSET = 10;
+PCB_MOUNTPOINT_WIDTH_OFFSET = 43.3;
+PCB_MOUNTPOINT_DEPTH_OFFSET = 28.3;
+PCB_MOUNTPOINT_HEIGHT = 10;
+PCB_MOUNTPOINT_BORDER_SIZE = 2;
+PCB_WIDTH = 81;
+PCB_DEPTH = 55.4;
+
+BATTERY_WIDTH = 78.0;
+BATTERY_DEPTH = 41.4;
+BATTERY_HEIGHT = 20;
+BATTERY_WALL = 2;
+BATTERY_WIDTH_OFFSET = -BATTERY_WALL;
+BATTERY_DEPTH_OFFSET = PCB_DEPTH;
+
+module pcb_mountpoint(x, y, h, r1, r2) {
+  translate([WALL + x, WALL + y, WALL]) {
+    difference() {
+      cylinder(h=h, r=r1);
+      cylinder(h=h + MARGIN, r=r2);
+    }
+  }
+}
 
 module window(depth, height, depth_offset, height_offset) {
   translate([WALL + WIDTH - MARGIN, WALL + depth_offset - depth / 2, WALL + height_offset])
@@ -152,10 +177,36 @@ module main() {
   mountpoint(0, DEPTH - 3 * WALL, 180);
   mountpoint(WIDTH - 3 * WALL, DEPTH - 3 * WALL, 90);
   mountpoint(WIDTH - 3 * WALL, 0, 0);
+
+  pcb_mountpoint(PCB_MOUNTPOINT_USB_WIDTH_OFFSET + PCB_MOUNTPOINT_WIDTH_OFFSET, PCB_MOUNTPOINT_DEPTH_OFFSET, PCB_MOUNTPOINT_HEIGHT, 7, 1.5);
+  translate([WALL + PCB_MOUNTPOINT_USB_WIDTH_OFFSET, WALL, WALL])
+    difference() {
+      cube([PCB_WIDTH, PCB_DEPTH, PCB_MOUNTPOINT_HEIGHT]);
+      translate([PCB_MOUNTPOINT_BORDER_SIZE, PCB_MOUNTPOINT_BORDER_SIZE, MARGIN])
+        cube([PCB_WIDTH - 2 * PCB_MOUNTPOINT_BORDER_SIZE, PCB_DEPTH - 2 * PCB_MOUNTPOINT_BORDER_SIZE, PCB_MOUNTPOINT_HEIGHT]);
+    }
+
+  translate([WALL + BATTERY_WIDTH_OFFSET, WALL + BATTERY_DEPTH_OFFSET, WALL])
+    difference() {
+      cube([BATTERY_WIDTH + 2 * BATTERY_WALL, BATTERY_DEPTH + 2 * BATTERY_WALL, BATTERY_HEIGHT]);
+      translate([BATTERY_WALL, BATTERY_WALL, MARGIN])
+        cube([BATTERY_WIDTH, BATTERY_DEPTH, BATTERY_HEIGHT]);
+    }
 }
 
 module lid() {
-  shape(WALL, LID_STEP - LID_MARGIN);
+  difference() {
+    shape(WALL, LID_STEP - LID_MARGIN);
+    translate([LID_STEP + MOUNTPOINT_SIZE / 2, LID_STEP + MOUNTPOINT_SIZE / 2, 0]) {
+      custom_cylinder(outside_radius=1.5, height=WALL + 2 * MARGIN);
+      translate([WIDTH - MOUNTPOINT_SIZE, 0])
+        custom_cylinder(outside_radius=1.5, height=WALL + 2 * MARGIN);
+      translate([WIDTH - MOUNTPOINT_SIZE, DEPTH - MOUNTPOINT_SIZE, 0])
+        custom_cylinder(outside_radius=1.5, height=WALL + 2 * MARGIN);
+      translate([0, DEPTH - MOUNTPOINT_SIZE, 0])
+        custom_cylinder(outside_radius=1.5, height=WALL + 2 * MARGIN);
+    }
+  }
 }
 
 module base() {
