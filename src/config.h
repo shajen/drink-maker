@@ -28,7 +28,7 @@ constexpr auto LOX_ADDRESS = 0x29;
 constexpr auto LOX_MEASURE_TIME = 500ms;
 
 constexpr auto PUMP_PIN = 0;
-constexpr auto PUMP_FACTOR = 300ms;  // time need to pour 1 ml
+constexpr auto PUMP_FACTOR = 176ms;  // time need to pour 1 ml
 
 constexpr auto SPLASH_SCREEN_TIME = std::chrono::seconds(3);
 constexpr auto STATUS_PRINT_INTERVAL = 1000ms;
