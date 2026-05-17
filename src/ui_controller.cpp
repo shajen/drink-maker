@@ -133,7 +133,7 @@ void UiController::loop(const std::chrono::milliseconds& now) {
       ESPUI.updateNumber(m_distanceErrorCountControl, m_uiData.m_distanceErrorCount);
       ESPUI.updateControlValue(m_fpsControl, String(m_statusController.getFps(), 2));
       ESPUI.updateControlValue(m_batteryVoltageControl, String(m_batteryController.getVoltage(), 2));
-      ESPUI.updateNumber(m_batteryPercentageControl, m_batteryController.getPercentage());
+      ESPUI.updateNumber(m_batteryPercentageControl, m_batteryController.getPercentage(m_isDebugTab));
     }
   }
 }

@@ -57,9 +57,8 @@ void Display::loop(const std::chrono::milliseconds& now) {
     ShortStaticString batteryData;
     ShortStaticString modeData;
 
-    const auto batteryPercentage = m_settings.m_isDebug ? m_batteryController.getPercentage() : std::min(m_batteryController.getPercentage(), 100);
     sprintf(capacityData.data(), "%dml", m_settings.m_capacity);
-    sprintf(batteryData.data(), "%d%%", batteryPercentage);
+    sprintf(batteryData.data(), "%d%%", m_batteryController.getPercentage(m_settings.m_isDebug));
     sprintf(modeData.data(), m_settings.m_mode == Mode::Auto ? "AUTO" : "MAN ");
 
     drawText(260, 193, m_capacityData.data(), capacityData.data(), 2, m_secondaryColor, 0);
@@ -72,11 +71,10 @@ void Display::loop(const std::chrono::milliseconds& now) {
   } else if (m_state == State::LowBattery) {
     ShortStaticString batteryData;
     if (m_settings.m_isDebug) {
-      sprintf(batteryData.data(), "%d%% %.2fV", m_batteryController.getPercentage(), m_batteryController.getVoltage());
+      sprintf(batteryData.data(), "%d%% %.2fV", m_batteryController.getPercentage(m_settings.m_isDebug), m_batteryController.getVoltage());
       drawText(0, 0, m_batteryData.data(), batteryData.data(), 3, ST77XX_WHITE, X_CENTER | Y_CENTER);
     } else {
-      const auto batteryPercentage = m_settings.m_isDebug ? m_batteryController.getPercentage() : std::min(m_batteryController.getPercentage(), 100);
-      sprintf(batteryData.data(), "%d %%", batteryPercentage);
+      sprintf(batteryData.data(), "%d %%", m_batteryController.getPercentage(m_settings.m_isDebug));
       drawText(0, 0, m_batteryData.data(), batteryData.data(), 5, ST77XX_WHITE, X_CENTER | Y_CENTER);
     }
     m_batteryData = batteryData;

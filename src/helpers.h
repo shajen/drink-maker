@@ -17,3 +17,8 @@ ShortStaticString formatDuration(const std::chrono::milliseconds& now, const boo
 char getWifiMode();
 
 char getWifiStatus();
+
+template <typename T>
+T mapValue(T value, T inMin, T inMax, T outMin, T outMax) {
+  return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
